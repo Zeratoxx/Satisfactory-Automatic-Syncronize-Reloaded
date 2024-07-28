@@ -1,0 +1,10 @@
+:stylesheet: readme-styles.css
+:stylesdir: styles
+
+= Satisfactory-Automatic-Syncronize-Reloaded
+
+|====
+^|[.my-big]##Work In Progress##
+|====
+
+Sychronize your Satisfactory SaveGames automatically with git in order to play with friends on the same SaveGames. Now with the usage of a proper coding language and an easy-to-use GUI. A respin of https://github.com/Zeratoxx/SatisfactoryAutomaticSynchronize[SatisfactoryAutomaticSynchronize]
