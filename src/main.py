@@ -12,7 +12,7 @@ class SatisfactoryAutomaticSynchronizeReloadedApp(App):
 
     def build(self):
         self.title = 'Satisfactory Automatic Synchronize Reloaded'
-        self.icon = 'icons8-zufriedenstellend-256.png'
+        self.icon = 'res/icons8-zufriedenstellend-256.png'
         return
 
 
