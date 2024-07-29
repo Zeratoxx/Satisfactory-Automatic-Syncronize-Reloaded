@@ -8,3 +8,20 @@
 |====
 
 Sychronize your Satisfactory SaveGames automatically with git in order to play with friends on the same SaveGames. Now with the usage of a proper coding language and an easy-to-use GUI. A respin of https://github.com/Zeratoxx/SatisfactoryAutomaticSynchronize[SatisfactoryAutomaticSynchronize]
+
+
+== Prerequisites
+
+* Python 3
+* Docker, either Docker Desktop or Docker Engine. You need `docker compose`.
+* make
+
+== Penpot Server
+
+=== Start 
+
+Type `make`
+
+=== Stop
+
+Type `make stop`
