@@ -1,0 +1,21 @@
+#:kivy 2.3.0
+
+BoxLayout:
+    minimum_size: 350, 300
+    orientation: 'vertical'
+
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'center'
+        padding: [10, 40]
+
+        Button:
+            size_hint: None, None
+            size: self.size
+            text: 'Button 1'
+
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'center'
+        padding: [10, 40]
+        Button:
