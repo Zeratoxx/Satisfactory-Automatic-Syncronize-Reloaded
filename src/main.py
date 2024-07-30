@@ -14,6 +14,8 @@ Config.set('graphics', 'position', 'auto')
 
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
+import os, sys
+from kivy.resources import resource_add_path, resource_find
 
 from src.libs.content.content import Content
 
@@ -25,7 +27,7 @@ class SatisfactoryAutomaticSynchronizeReloaded(GridLayout):
 class MainApp(App):
     def build(self):
         self.title = 'SASR - Satisfactory Automatic Synchronize Reloaded'
-        self.icon = 'res/icons/icons8-zufriedenstellend-256.png'
+        self.icon = 'res/images/icons8-zufriedenstellend-256.png'
         root = SatisfactoryAutomaticSynchronizeReloaded()
         root.add_widget(Content())
         return root
@@ -33,4 +35,7 @@ class MainApp(App):
 
 if __name__ == '__main__':
     kivy.require('2.3.0')
+    if hasattr(sys, '_MEIPASS'):
+        # noinspection PyProtectedMember
+        resource_add_path(os.path.join(sys._MEIPASS))
     MainApp().run()
