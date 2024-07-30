@@ -23,5 +23,5 @@ class MainBoxes(GridLayout):
         self.add_widget(self.password)
 
 
-class Interface(Widget):
+class Content(BoxLayout):
     pass

@@ -1,0 +1,116 @@
+#:kivy 2.3.0
+#: import Content libs.content.content.Content
+
+#  include kv files
+#: include libs/content/content.kv
+
+<SatisfactoryAutomaticSynchronizeReloaded>:
+    cols: 1
+    rows: 2
+
+
+    # ------------- BACKDROP -------------
+    canvas.before:
+        Color:
+            rgba: .168, .242, .3125, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+    # ------------- HEADER -------------
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'center'
+        height: 130
+        size_hint_y: None
+        size_hint_x: 1
+
+        canvas.before:
+            Color:
+                rgba: .15, .15, .15, .3
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            # [padding_left, padding_top, padding_right, padding_bottom], [padding_horizontal, padding_vertical] or [padding]
+            padding: [15, 15]
+            spacing: 0
+
+            BoxLayout:
+                size_hint_y: 1
+                size_hint_x: None
+
+                AnchorLayout:
+                    anchor_x: 'center'
+                    anchor_y: 'center'
+                    Image:
+                        size_hint_y: 1
+                        size_hint_x: 1
+                        source: 'res/icons/icons8-zufriedenstellend-512.png'
+
+            AnchorLayout:
+                anchor_x: 'center'
+                anchor_y: 'center'
+                size_hint_y: 1
+                size_hint_x: 0.75
+
+                RelativeLayout:
+
+                    # for debugging
+                    #canvas:
+                    #    Color:
+                    #        rgba: 1, 0, 0, 0.5
+                    #    Rectangle:
+                    #        size: self.size
+
+                    Label:
+                        outline_color: .1, .1, .1, 0
+                        outline_width: 2
+                        x: -75
+                        y: 30
+                        size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        font_size: 28
+                        line_height: 1.2
+                        font_name: 'res/fonts/Satisfontory_v1.5.ttf'
+                        text: 'Satisfactory'
+                    Label:
+                        outline_color: .1, .1, .1, 0
+                        outline_width: 2
+                        pos_hint: {'left': -50}
+                        x: -91
+                        y: -5
+                        size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        font_size: 28
+                        line_height: 1.2
+                        font_name: 'res/fonts/Satisfontory_v1.5.ttf'
+                        text: 'Automatic'
+                    Label:
+                        outline_color: .1, .1, .1, 0
+                        outline_width: 2
+                        x: 99
+                        y: -5
+                        size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        font_size: 28
+                        line_height: 1.2
+                        font_name: 'res/fonts/Satisfontory_v1.5.ttf'
+                        text: 'Synchronize'
+                    Label:
+                        outline_color: .1, .1, .1, 0
+                        outline_width: 2
+                        x: 148
+                        y: -35
+                        size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+                        font_size: 16
+                        line_height: 1.2
+                        font_name: 'res/fonts/Satisfontory_v1.5.ttf'
+                        text: 'Reloaded'
