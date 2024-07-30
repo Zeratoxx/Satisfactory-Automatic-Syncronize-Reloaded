@@ -1,3 +1,5 @@
+import sys
+sys.setrecursionlimit(5000)
 from kivy_deps import sdl2, glew
 # -*- mode: python ; coding: utf-8 -*-
 
