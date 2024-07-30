@@ -4,18 +4,21 @@ kivy.require('2.3.0')
 
 from kivy.config import Config
 
+default_width = '560'
+default_height = '600'
 Config.set('kivy', 'desktop', '1')
-Config.set('graphics', 'width', '560')
-Config.set('graphics', 'height', '600')
-Config.set('graphics', 'minimum_width', '560')
-Config.set('graphics', 'minimum_height', '600')
+Config.set('graphics', 'width', default_width)
+Config.set('graphics', 'height', default_height)
+Config.set('graphics', 'minimum_width', default_width)
+Config.set('graphics', 'minimum_height', default_height)
 # Config.set('graphics', 'resizable', '0')
 Config.set('graphics', 'position', 'auto')
 
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
-import os, sys
-from kivy.resources import resource_add_path, resource_find
+import os
+import sys
+from kivy.resources import resource_add_path
 
 from src.libs.content.content import Content
 
