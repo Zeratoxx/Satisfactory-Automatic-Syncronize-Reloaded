@@ -3,22 +3,24 @@
 
 <CustomDropDown>:
     size_hint_y: None
-    size_hint_x: .7
+    size_hint_x: None
+    width: 100
     height: 60
     Button:
         text: 'My first Item'
         size_hint_y: None
         height: 44
-        on_release: root.select('item1')
-    Label:
-        text: 'Unselectable item'
+        on_release: root.select(self.text)
+    Button:
+        text: 'My first and half Item'
         size_hint_y: None
         height: 44
+        on_release: root.select(self.text)
     Button:
         text: 'My second Item'
         size_hint_y: None
         height: 44
-        on_release: root.select('item2')
+        on_release: root.select(self.text)
 
 
 # ------------- CONTENT -------------
@@ -56,7 +58,7 @@
                 AnchorLayout:
                     anchor_y: 'center'
                     anchor_x: 'center'
-                    size_hint_y: .3
+                    size_hint_y: .1
                     size_hint_min_y: 60
                     size_hint_max_y: 100
 
@@ -134,7 +136,7 @@
                 AnchorLayout:
                     anchor_y: 'center'
                     anchor_x: 'center'
-                    size_hint_y: .3
+                    size_hint_y: .1
                     size_hint_x: 1
                     size_hint_min_y: 60
                     size_hint_max_y: 100
@@ -157,6 +159,48 @@
                                 height: 60
                                 text_size: self.width, None
                                 text: 'Choose the world:'
+
+                AnchorLayout:
+                    anchor_y: 'center'
+                    anchor_x: 'center'
+                    size_hint_y: None
+                    size_hint_x: 1
+                    height: 4
+
+                    canvas:
+                        Color:
+                            rgba: rgba(63, 63, 63)
+                        Rectangle:
+                            pos: self.x, self.center_y - 1
+                            size: self.width, 2
+
+                AnchorLayout:
+                    anchor_y: 'center'
+                    anchor_x: 'center'
+                    size_hint_y: .7
+                    size_hint_x: 1
+                    size_hint_min_y: 60
+                    #size_hint_max_y: 100
+
+                    BoxLayout:
+                        orientation: 'vertical'
+
+                        BoxLayout:
+                            size_hint_y: None
+                            height: sp(52)
+
+                            Button:
+                                text: 'Icon View'
+                                on_press: fc.view_mode = 'icon'
+                            Button:
+                                text: 'List View'
+                                on_press: fc.view_mode = 'list'
+
+                        FileChooser:
+                            id: fc
+                            FileChooserIconLayout
+                            FileChooserListLayout
+
 
             BoxLayout:
                 size_hint_y: .15
