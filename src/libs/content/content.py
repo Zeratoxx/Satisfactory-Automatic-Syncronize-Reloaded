@@ -1,4 +1,5 @@
 from kivy.uix.dropdown import DropDown
+from kivy.uix.pagelayout import PageLayout
 from kivy.uix.widget import Widget
 from kivy.properties import (
     NumericProperty, ReferenceListProperty, ObjectProperty
@@ -29,7 +30,7 @@ class MainBoxes(GridLayout):
         self.add_widget(self.password)
 
 
-class Content(BoxLayout):
+class Content(PageLayout):
     def __init__(self, **kwargs):
         super(Content, self).__init__(**kwargs)
         dropdown = CustomDropDown()
@@ -40,3 +41,9 @@ class Content(BoxLayout):
 
         # access the BoxLayout with the id "worldChoiceContainer" defined in content.kv and add main_button
         self.ids.worldChoiceContainer.add_widget(main_button)
+
+    def second_init(self):
+        edit_button = Button(text='Edit Worlds...', size_hint_y=None, size_hint_x=1.45, height=60)
+        # TODO use edit icon instead of text
+        self.ids.worldChoiceContainer.add_widget(edit_button)
+        edit_button.bind(on_release=self.parent.show_select)

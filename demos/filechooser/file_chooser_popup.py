@@ -55,10 +55,8 @@ class Editor(App):
     pass
 
 
-Factory.register('Root', cls=Root)
-Factory.register('LoadDialog', cls=LoadDialog)
-Factory.register('SaveDialog', cls=SaveDialog)
-
-
 if __name__ == '__main__':
+    # Factory.register('Root', cls=Root)
+    # Factory.register('LoadDialog', cls=LoadDialog)
+    # Factory.register('SaveDialog', cls=SaveDialog)
     Editor().run()

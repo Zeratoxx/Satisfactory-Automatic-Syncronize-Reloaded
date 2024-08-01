@@ -25,6 +25,7 @@ Builder.load_string('''
     drives_list: drives_list
     file_chooser: file_chooser
     RecycleView:
+        
         id: drives_list
         viewclass: 'SelectableLabel'
         SelectableRecycleBoxLayout:
