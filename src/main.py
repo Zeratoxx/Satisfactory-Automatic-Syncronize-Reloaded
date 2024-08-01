@@ -1,8 +1,6 @@
 import kivy
 from kivy.factory import Factory
 
-from src.libs.content.dir_chooser_popup import DirSelectDialog
-
 kivy.require('2.3.0')
 
 from kivy.config import Config
@@ -26,6 +24,8 @@ from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
 
 from src.libs.content.content import Content
+from src.libs.content.dialog_content import DirSelectDialog
+from src.libs.content.dialog_content import EditWorldsDialog
 
 
 class SatisfactoryAutomaticSynchronizeReloaded(GridLayout):
@@ -33,10 +33,19 @@ class SatisfactoryAutomaticSynchronizeReloaded(GridLayout):
     world_editor_popup_content = ObjectProperty(None) #evtl nicht nötig
 
     def dismiss_popup(self):
+        self._popup.dismiss()
+
+    def switch_popup_content(self):
         self._popup = Popup(title="Edit worlds", content=self.world_editor_popup_content,
                             size_hint=(0.9, 0.9))
 
-    def show_select(self, widget):
+    def show_edit_worlds(self, widget):
+        edit_worlds_dialog_content = EditWorldsDialog(confirm=self.confirm_world_list, cancel=self.dismiss_popup)
+        self._popup = Popup(title="Edit Worlds", content=edit_worlds_dialog_content,
+                            size_hint=(0.9, 0.9))
+        self._popup.open()
+
+    def show_dir_select(self, widget):
         dir_select_dialog_content = DirSelectDialog(select=self.select, cancel=self.dismiss_popup)
         self._popup = Popup(title="Select directory", content=dir_select_dialog_content,
                             size_hint=(0.9, 0.9))
@@ -45,7 +54,10 @@ class SatisfactoryAutomaticSynchronizeReloaded(GridLayout):
     def select(self, path, filename):
         self.select_dir.text = os.path.join(path, filename[0])
         self.dismiss_popup()
-    pass
+
+    def confirm_world_list(self):
+        # TODO save
+        self.dismiss_popup()
 
 
 class MainApp(App):

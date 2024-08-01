@@ -46,4 +46,4 @@ class Content(PageLayout):
         edit_button = Button(text='Edit Worlds...', size_hint_y=None, size_hint_x=1.45, height=60)
         # TODO use edit icon instead of text
         self.ids.worldChoiceContainer.add_widget(edit_button)
-        edit_button.bind(on_release=self.parent.show_select)
+        edit_button.bind(on_release=self.parent.show_edit_worlds)
