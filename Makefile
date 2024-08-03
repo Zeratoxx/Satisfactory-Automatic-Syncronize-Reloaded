@@ -30,7 +30,7 @@ package-windows:
 	python -m PyInstaller --log-level=INFO "Satisfactory Automatic Synchronize Reloaded.spec" --noconfirm
 
 generate-windows-spec:
-	python -m PyInstaller --log-level=INFO --onefile --noconsole --add-data src/libs:libs --name "Satisfactory Automatic Synchronize Reloaded" --icon src/res/icon.ico src/main.py
+	python -m PyInstaller --log-level=INFO --onefile --noconsole --hidden-import=win32file --add-data src/libs:libs --name "Satisfactory Automatic Synchronize Reloaded" --icon src/res/icon.ico src/main.py
 	@echo " "
 	@echo "To be edited in created .spec file:"
 	@echo "$$string1"

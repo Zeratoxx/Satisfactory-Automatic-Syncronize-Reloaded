@@ -1,5 +1,4 @@
 import kivy
-from kivy.factory import Factory
 
 kivy.require('2.3.0')
 
@@ -8,56 +7,74 @@ from kivy.config import Config
 default_width = '560'
 default_height = '600'
 Config.set('kivy', 'desktop', '1')
+Config.set('kivy', 'exit_on_escape', '0')
 Config.set('graphics', 'width', default_width)
 Config.set('graphics', 'height', default_height)
 Config.set('graphics', 'minimum_width', default_width)
 Config.set('graphics', 'minimum_height', default_height)
 # Config.set('graphics', 'resizable', '0')
 Config.set('graphics', 'position', 'auto')
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 from kivy.app import App
 import os
 import sys
 from kivy.resources import resource_add_path
 from kivy.uix.gridlayout import GridLayout
-from kivy.properties import ObjectProperty
-from kivy.uix.popup import Popup
+from kivy.core.window import Window
+from kivy.graphics import Color, Rectangle
+from kivy.uix.label import Label
 
 from src.libs.content.content import Content
-from src.libs.content.dialog_content import DirSelectDialog
-from src.libs.content.dialog_content import EditWorldsDialog
+
+
+class HighlightLabel(Label):
+    def __init__(self, **kwargs):
+        super(HighlightLabel, self).__init__(**kwargs)
+        Window.bind(mouse_pos=self.on_mouse_pos)
+        self._instructions = []
+
+    def on_mouse_pos(self, *largs):
+        pos = self.to_widget(*largs[1])
+        if self.collide_point(*pos):
+            tx, ty = pos
+            tx -= self.center_x - self.texture_size[0] / 2.
+            ty -= self.center_y - self.texture_size[1] / 2.
+            ty = self.texture_size[1] - ty
+            for uid, zones in self.refs.items():
+                for zone in zones:
+                    x, y, w, h = zone
+                    if x <= tx <= w and y <= ty <= h:
+                        self._highlight_ref(uid)
+                        return
+        if self._instructions:
+            self._clear_instructions()
+
+    def _highlight_ref(self, name):
+        if self._instructions:
+            return
+        store = self._instructions.append
+        with self.canvas:
+            store(Color(0, 1, 0, 0.25))
+
+        for box in self.refs[name]:
+            box_x = self.center_x - self.texture_size[0] * 0.5 + box[0]
+            box_y = self.center_y + self.texture_size[1] * 0.5 - box[1]
+            box_w = box[2] - box[0]
+            box_h = box[1] - box[3]
+            with self.canvas:
+                store(Rectangle(
+                    pos=(box_x, box_y), size=(box_w, box_h)))
+
+    def _clear_instructions(self):
+        rm = self.canvas.remove
+        for instr in self._instructions:
+            rm(instr)
+        self._instructions = []
 
 
 class SatisfactoryAutomaticSynchronizeReloaded(GridLayout):
-    select_dir = ObjectProperty(None)
-    world_editor_popup_content = ObjectProperty(None) #evtl nicht nötig
-
-    def dismiss_popup(self):
-        self._popup.dismiss()
-
-    def switch_popup_content(self):
-        self._popup = Popup(title="Edit worlds", content=self.world_editor_popup_content,
-                            size_hint=(0.9, 0.9))
-
-    def show_edit_worlds(self, widget):
-        edit_worlds_dialog_content = EditWorldsDialog(confirm=self.confirm_world_list, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Edit Worlds", content=edit_worlds_dialog_content,
-                            size_hint=(0.9, 0.9))
-        self._popup.open()
-
-    def show_dir_select(self, widget):
-        dir_select_dialog_content = DirSelectDialog(select=self.select, cancel=self.dismiss_popup)
-        self._popup = Popup(title="Select directory", content=dir_select_dialog_content,
-                            size_hint=(0.9, 0.9))
-        self._popup.open()
-
-    def select(self, path, filename):
-        self.select_dir.text = os.path.join(path, filename[0])
-        self.dismiss_popup()
-
-    def confirm_world_list(self):
-        # TODO save
-        self.dismiss_popup()
+    pass
 
 
 class MainApp(App):

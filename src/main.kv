@@ -1,11 +1,11 @@
 #:kivy 2.3.0
 #: import Content libs.content.content.Content
-#: import DirSelectDialog libs.content.dialog_content.DirSelectDialog
-#: import EditWorldsDialog libs.content.dialog_content.EditWorldsDialog
+#: import DirSelectDialog libs.content.dialogs.DirSelectDialog
+#: import EditWorldsDialog libs.content.dialogs.EditWorldsDialog
 
 #  include kv files
 #: include libs/content/content.kv
-#: include libs/content/dialog_content.kv
+#: include libs/content/dialogs.kv
 
 <SatisfactoryAutomaticSynchronizeReloaded>:
     cols: 1
@@ -68,6 +68,50 @@
                     #        rgba: 1, 0, 0, 0.5
                     #    Rectangle:
                     #        size: self.size
+
+                    Label:
+                        text: 'Icons'
+                        outline_color: .1, .1, .1, 0
+                        outline_width: 2
+                        size: self.size
+                        font_size: 10
+                        font_color: rgba(.4,.4,.4)
+                        halign: 'left'
+                        valign: 'middle'
+                        #text_size: self.width, None
+                        #size_hint_y: None
+                        x: -160
+                        y: -35
+                        font_name: 'res/fonts/Satisfontory_v1.5.ttf'
+
+                    Label:
+                        text: 'by'
+                        outline_color: .1, .1, .1, 0
+                        outline_width: 2
+                        size: self.size
+                        font_size: 10
+                        font_color: rgba(.4,.4,.4)
+                        halign: 'left'
+                        valign: 'middle'
+                        x: -135
+                        y: -35
+                        font_name: 'res/fonts/Satisfontory_v1.5.ttf'
+
+                    HighlightLabel:
+                        text: '[ref=https://icons8.de][color=5151ff]Icons8[/color][/ref]'
+                        outline_color: .1, .1, .1, 0
+                        outline_width: 2
+                        size: self.size
+                        font_size: 10
+                        halign: 'left'
+                        valign: 'middle'
+                        x: -108
+                        y: -35
+                        markup: True
+                        font_name: 'res/fonts/Satisfontory_v1.5.ttf'
+                        on_ref_press:
+                            import webbrowser
+                            webbrowser.open(args[1])
 
                     Label:
                         outline_color: .1, .1, .1, 0

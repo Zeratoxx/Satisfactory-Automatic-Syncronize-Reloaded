@@ -1,0 +1,73 @@
+#:kivy 2.3.0
+
+<DirSelectDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            spacing: 5
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Select"
+                on_release: root.select_dir(filechooser.path, filechooser.selection)
+
+<EditWorldsDialog>:
+    orientation: 'vertical'
+    padding: 0, 10, 0, 0
+    spacing: 10
+
+    StackLayout:
+        orientation: 'rl-tb'
+        size_hint_y: None
+        height: 40
+        spacing: 10
+
+        # bc of 'right-to-left' orientation of StackLayout, the first Widget is the most right one.
+        Button:
+            text: 'Add world...'
+            size_hint_y: 1
+            size_hint_x: None
+
+        #Label:
+        #    text: 'kek'
+        #    width: 30
+        #    size_hint_y: 1
+        #    size_hint_x: None
+        #    canvas.before:
+        #        Color:
+        #            rgba: 1, 0, 0, .8
+        #        Rectangle:
+        #            size: self.size
+        #            pos: self.pos
+
+
+    BoxLayout: # TODO RecycleView here with list of worlds as data
+        orientation: 'vertical'
+        id: worldEditList
+
+        Label:
+            text: root.selected_dir
+        Label:
+            text: 'test2'
+        Label:
+            text: 'test3'
+
+    BoxLayout:
+        size_hint_y: None
+        height: 50
+        spacing: 5
+        Button:
+            text: "Cancel"
+            on_release: root.cancel()
+        Button:
+            text: "Confirm"
+            on_release: root.confirm()
