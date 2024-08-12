@@ -1,4 +1,5 @@
 import os
+
 from plyer import filechooser
 
 from kivy.uix.dropdown import DropDown
@@ -17,6 +18,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 
+from src.libs.constants import SATISFACTORY_SAVED_FOLDER_PATH
 from src.libs.content.dialogs import EditWorldsDialog, DirSelectDialog
 
 
@@ -65,7 +67,7 @@ class Content(BoxLayout):
 
     def second_init(self):
         edit_button = Button(text='Edit Worlds...', size_hint_y=None, size_hint_x=1.45, height=60)
-        # TODO use edit icon instead of text
+        # TODO use edit icon instead of text src/res/images/icons8-bearbeiten.gif
         self.ids.worldChoiceContainer.add_widget(edit_button)
         edit_button.bind(on_release=self.show_edit_worlds)
 
@@ -76,8 +78,11 @@ class Content(BoxLayout):
         self._popup.open()
 
     def open_system_dir_chooser(self, widget=None):
-        path = filechooser.choose_dir(title="Select a directory...")
-        if path is not None:
+        # TODO default path for other OS'es
+        # TODO fix default path on Windows
+        path = filechooser.choose_dir(title="Select a directory...",
+                                      path=os.path.expandvars(SATISFACTORY_SAVED_FOLDER_PATH))
+        if path is not None and len(path) != 0:
             self.world_editor_popup.content.selected_dir = path[0]
         else:
             print("path empty")
