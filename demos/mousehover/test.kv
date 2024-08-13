@@ -1,0 +1,35 @@
+BoxLayout:
+    orientation: 'vertical'
+
+    ReactiveImage:
+        canvas.before:
+            Color:
+                rgba: rgba(63, 63, 63)
+            Rectangle:
+                pos: self.x, self.y
+                size: self.width, self.height
+
+        id: edit_gif
+        source: 'icons8-bearbeiten-ezgif.com-instagif-less-white.gif'
+        center: self.parent.center
+        size_hint_x: .9
+        size_hint_y: .9
+        allow_stretch: False
+        opacity: 1
+        anim_delay: 1/24
+
+    ReactiveImage:
+        canvas.before:
+            Color:
+                rgba: rgba(63, 63, 63)
+            Rectangle:
+                pos: self.x, self.y
+                size: self.width, self.height
+        id: progress_gif
+        source: 'Infinity@1x-11.1s-200px-200px_orange.gif'
+        center: self.parent.center
+        size_hint_x: .9
+        size_hint_y: .9
+        allow_stretch: False
+        opacity: 1
+        anim_delay: 1/60

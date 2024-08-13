@@ -159,8 +159,28 @@
                                 text_size: self.width, None
                                 text: 'Choose the world:'
 
-                        # dropdown gets injected by python code with add_widget()
-                        # edit worlds dialog button
+                        Button:
+                            id: dropdown_main_button
+                            text: 'Choose World...'
+                            size_hint_y: None
+                            size_hint_x: 1.45
+                            height: 60
+
+                        ReactiveButton:
+                            id: editWorldsListButton
+                            size_hint_y: None
+                            size_hint_x: 1.45
+                            height: 60
+
+                            Image:
+                                id: edit_gif
+                                source: 'res/images/icons8-bearbeiten-ezgif.com-instagif-less-white.gif'
+                                center: self.parent.center
+                                height: 30
+                                allow_stretch: False
+                                opacity: 1
+                                anim_loop: 1
+                                anim_delay: -1
 
                 AnchorLayout:
                     anchor_y: 'center'
@@ -251,8 +271,8 @@
                     size: self.size
                     text: 'Launch'
 
-                    on_press: launch_button.background_color=rgba(193, 94, 0) # Press state color
-                    on_release: launch_button.background_color=rgba(229, 148, 69) # Normal state color, but is a single click launch
+                    on_press: launch_button.background_color = rgba(193, 94, 0) # Press state color
+                    on_release: launch_button.background_color = rgba(229, 148, 69) # Normal state color, but is a single click launch
 
 
                     # vielleicht erst durch code machen, dann kann ich das je nach aktuellem zustand ändern lassen
@@ -260,16 +280,16 @@
                     on_press: launch_button.disabled = True
 
                     # das hier für: - ist schon irgendwo sichtbar und angehalten und wird bei laden gestartet.
-                    on_press: gif.anim_delay = 1/60
-                    on_press: gif._coreimage.anim_reset(True)
-                    on_press: gif.opacity = 1
+                    on_press: working_gif.anim_delay = 1/60
+                    on_press: working_gif._coreimage.anim_reset(True)
+                    on_press: working_gif.opacity = 1
 
                     # ideen:
                     #  - ist schon irgendwo sichtbar und angehalten und wird bei laden gestartet.
                     #  - ist irgendwo ist ein anderes symbol sichtbar und wird bei laden mit gif ersetzt.
                     #  - ist nirgends sichtbar und wird bei laden sichtbar.
                     Image:
-                        id: gif
+                        id: working_gif
                         source: 'res/images/Infinity@1x-25.0s-200px-200px_grey.gif'
                         center: self.parent.center
                         size: 150, 150

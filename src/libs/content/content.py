@@ -1,5 +1,7 @@
 import os
 
+from kivy.core.window import Window
+from kivy.uix.image import Image
 from plyer import filechooser
 
 from kivy.uix.dropdown import DropDown
@@ -17,22 +19,44 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
+from winioctlcon import F3_720_512
 
 from src.libs.constants import SATISFACTORY_SAVED_FOLDER_PATH
 from src.libs.content.dialogs import EditWorldsDialog, DirSelectDialog
 
 
-# class MainBoxes(GridLayout):
-#
-#     def __init__(self, **kwargs):
-#         super(MainBoxes, self).__init__(**kwargs)
-#         self.cols = 2
-#         self.add_widget(Label(text='User Name'))
-#         self.username = TextInput(multiline=False)
-#         self.add_widget(self.username)
-#         self.add_widget(Label(text='password'))
-#         self.password = TextInput(password=True, multiline=False)
-#         self.add_widget(self.password)
+class ReactiveButton(Button):
+    def __init__(self, **kwargs):
+        super(ReactiveButton, self).__init__(**kwargs)
+        Window.bind(mouse_pos=self.on_mouse_pos_on_button)
+        self._active = False
+
+    def on_mouse_pos_on_button(self, *largs):
+        pos = self.to_widget(*largs[1])
+        if self.collide_point(*pos):
+            self._reaction_ref()
+            return
+        if self._active:
+            self._clear_instructions()
+
+    def _reaction_ref(self):
+        if self._active:
+            return
+        for child in self.children:
+            if isinstance(child, Image):
+                child._coreimage.anim_reset(True)
+                child.anim_delay = 1/24
+        self._active = True
+
+    def _clear_instructions(self):
+        if not self._active:
+            return
+        for child in self.children:
+            if isinstance(child, Image):
+                # child._coreimage.anim_reset(True)
+                # child.anim_delay = -1
+                pass
+        self._active = False
 
 
 class CustomDropDown(DropDown):
@@ -58,18 +82,14 @@ class Content(BoxLayout):
                                       size_hint=(0.9, 0.9), separator_color=rgba(229, 148, 69))
         self._popup = self.world_editor_popup
 
-        main_button = Button(text='Choose World...', size_hint_y=None, size_hint_x=1.45, height=60)
-        main_button.bind(on_release=dropdown.open)
-        dropdown.bind(on_select=lambda instance, x: setattr(main_button, 'text', x))
+        self.ids.dropdown_main_button.bind(on_release=dropdown.open)
+        dropdown.bind(on_select=lambda instance, x: setattr(self.ids.dropdown_main_button, 'text', x))
 
         # access the BoxLayout with the id "worldChoiceContainer" defined in content.kv and add main_button
-        self.ids.worldChoiceContainer.add_widget(main_button)
 
     def second_init(self):
-        edit_button = Button(text='Edit Worlds...', size_hint_y=None, size_hint_x=1.45, height=60)
-        # TODO use edit icon instead of text src/res/images/icons8-bearbeiten.gif
-        self.ids.worldChoiceContainer.add_widget(edit_button)
-        edit_button.bind(on_release=self.show_edit_worlds)
+        self.ids.edit_gif._coreimage.anim_reset(False)
+        self.ids.editWorldsListButton.bind(on_release=self.show_edit_worlds)
 
     def dismiss_popup(self):
         self._popup.dismiss()
