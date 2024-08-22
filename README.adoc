@@ -36,3 +36,8 @@ Sychronize your Satisfactory SaveGames automatically with git in order to play w
 .. Windows (first)
 .. Linux (?)
 .. Mac (?)
+. non-functional requirements
+.. folder structure cleanup
+.. refactor code
+... rename identifiers
+... separate modules in packages
