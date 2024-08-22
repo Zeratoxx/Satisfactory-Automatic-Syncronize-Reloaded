@@ -14,3 +14,25 @@ Sychronize your Satisfactory SaveGames automatically with git in order to play w
 
 * https://www.python.org/downloads/[Python 3]
 * https://kivy.org/doc/stable/gettingstarted/installation.html#setup-terminal-and-pip[Kivy]
+
+== Roadmap
+. GUI
+.. [line-through]#evaluate fitting technology# (Kivy)
+.. [line-through]#Create# finish main window
+... [line-through]#release version toggle (stable/experimental)#
+... [line-through]#world chooser#
+... git message edit (with default)
+.. [line-through]#Create# finish edit worlds
+... reorder
+... delete/unlink
+... add
+.. remember choices from last usage (probably in backend?)
+. Backend (reprogram from batch scripts)
+.. release version chooser
+.. world chooser
+.. observer (waiting for game start and then waiting for game end)
+.. commit and upload handler
+. cross-platform
+.. Windows (first)
+.. Linux (?)
+.. Mac (?)
