@@ -1,0 +1,3 @@
+kivy~=2.3
+plyer~=2.1
+kivy_garden.hover @ git+https://github.com/pythonic64/hover.git@02932c7

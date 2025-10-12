@@ -21,17 +21,31 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from winioctlcon import F3_720_512
 
-from src.libs.constants import SATISFACTORY_SAVED_FOLDER_PATH
+import src.libs.constants as constants
 from src.libs.content.dialogs import EditWorldsDialog, DirSelectDialog
+from src.libs.utils import utils
+
+
+# class PointedButton(Button):
+#     def __init__(self, **kwargs):
+#         super(PointedButton, self).__init__(**kwargs)
+#         Window.bind(mouse_pos=self.on_mouse_pos_on_button)
+#
+#     def on_mouse_pos_on_button(self, *largs):
+#         pos = self.to_widget(*largs[1])
+#         if self.collide_point(*pos):
+#             utils.set_cursor(constants.CURSOR_HAND)
+#             return
+#         utils.set_cursor(constants.CURSOR_ARROW)
 
 
 class ReactiveButton(Button):
     def __init__(self, **kwargs):
         super(ReactiveButton, self).__init__(**kwargs)
-        Window.bind(mouse_pos=self.on_mouse_pos_on_button)
         self._active = False
 
     def on_mouse_pos_on_button(self, *largs):
+        # super(ReactiveButton, self).on_mouse_pos_on_button(*largs)
         pos = self.to_widget(*largs[1])
         if self.collide_point(*pos):
             self._reaction_ref()
@@ -60,6 +74,16 @@ class ReactiveButton(Button):
 
 
 class CustomDropDown(DropDown):
+    # def __init__(self, **kwargs):
+    #     super(CustomDropDown, self).__init__(**kwargs)
+    #     Window.bind(mouse_pos=self.on_mouse_pos_on_button)
+    #
+    # def on_mouse_pos_on_button(self, *largs):
+    #     pos = self.to_widget(*largs[1])
+    #     if self.collide_point(*pos):
+    #         utils.set_cursor(constants.CURSOR_HAND)
+    #         return
+    #     utils.set_cursor(constants.CURSOR_ARROW)
     pass
 
 
@@ -101,7 +125,7 @@ class Content(BoxLayout):
         # TODO default path for other OS'es
         # TODO fix default path on Windows
         path = filechooser.choose_dir(title="Select a directory...",
-                                      path=os.path.expandvars(SATISFACTORY_SAVED_FOLDER_PATH))
+                                      path=os.path.expandvars(constants.SATISFACTORY_SAVED_FOLDER_PATH))
         if path is not None and len(path) != 0:
             self.world_editor_popup.content.selected_dir = path[0]
         else:

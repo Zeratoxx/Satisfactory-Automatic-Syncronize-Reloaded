@@ -60,7 +60,7 @@
                 size_hint_y: 1
                 size_hint_x: 0.75
 
-                RelativeLayout:
+                BoxLayout:
 
                     # for debugging
                     #canvas:
@@ -98,15 +98,18 @@
                         font_name: 'res/fonts/Satisfontory_v1.5.ttf'
 
                     HighlightLabel:
+
                         text: '[ref=https://icons8.de][color=5151ff]Icons8[/color][/ref]'
                         outline_color: .1, .1, .1, 0
                         outline_width: 2
-                        size: self.size
+                        #size: self.size
                         font_size: 10
                         halign: 'left'
                         valign: 'middle'
                         x: -108
+                        #x: -50
                         y: -35
+                        #y: -15
                         markup: True
                         font_name: 'res/fonts/Satisfontory_v1.5.ttf'
                         on_ref_press:
