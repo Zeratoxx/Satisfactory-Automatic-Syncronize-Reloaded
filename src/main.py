@@ -41,23 +41,11 @@ class HighlightLabel(HoverBehavior, Label):
         super(HighlightLabel, self).__init__(**kwargs)
         self._instructions = []
 
-    def on_hover_update(self, me):
-        print(f'Update: {me.pos}')
-
     def on_hover_enter(self, me):
-        print(f"enter: {me.pos}")
-        tx, ty = me.pos
-        tx -= self.center_x - self.texture_size[0] / 2.
-        ty -= self.center_y - self.texture_size[1] / 2.
-        ty = self.texture_size[1] - ty
         for uid, zones in self.refs.items():
-            for zone in zones:
-                x, y, w, h = zone
-                if x <= tx <= w and y <= ty <= h:
-                    self._highlight_ref(uid)
+            self._highlight_ref(uid)
 
     def on_hover_leave(self, me):
-        print(f"leave: {me.pos}")
         self._clear_instructions()
 
     def _highlight_ref(self, name):

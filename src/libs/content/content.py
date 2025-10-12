@@ -16,6 +16,7 @@ from kivy.vector import Vector
 from kivy.clock import Clock
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
+from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
@@ -25,66 +26,59 @@ import src.libs.constants as constants
 from src.libs.content.dialogs import EditWorldsDialog, DirSelectDialog
 from src.libs.utils import utils
 
-
-# class PointedButton(Button):
-#     def __init__(self, **kwargs):
-#         super(PointedButton, self).__init__(**kwargs)
-#         Window.bind(mouse_pos=self.on_mouse_pos_on_button)
-#
-#     def on_mouse_pos_on_button(self, *largs):
-#         pos = self.to_widget(*largs[1])
-#         if self.collide_point(*pos):
-#             utils.set_cursor(constants.CURSOR_HAND)
-#             return
-#         utils.set_cursor(constants.CURSOR_ARROW)
+from kivy_garden.hover import (
+    HoverManager,
+    HoverBehavior,
+    MotionCollideBehavior
+)
 
 
-class ReactiveButton(Button):
+class PointedButton(HoverBehavior, Button):
+    def on_hover_enter(self, me):
+        utils.set_cursor(constants.CURSOR_HAND)
+
+    def on_hover_update(self, me):
+        utils.set_cursor(constants.CURSOR_HAND)
+
+    def on_hover_leave(self, me):
+        utils.set_cursor(constants.CURSOR_ARROW)
+
+
+class PointedToggleButton(HoverBehavior, ToggleButton):
+    def on_hover_enter(self, me):
+        utils.set_cursor(constants.CURSOR_HAND)
+
+    def on_hover_update(self, me):
+        utils.set_cursor(constants.CURSOR_HAND)
+
+    def on_hover_leave(self, me):
+        utils.set_cursor(constants.CURSOR_ARROW)
+
+
+class ReactiveButton(PointedButton):
     def __init__(self, **kwargs):
         super(ReactiveButton, self).__init__(**kwargs)
-        self._active = False
 
-    def on_mouse_pos_on_button(self, *largs):
-        # super(ReactiveButton, self).on_mouse_pos_on_button(*largs)
-        pos = self.to_widget(*largs[1])
-        if self.collide_point(*pos):
-            self._reaction_ref()
-            return
-        if self._active:
-            self._clear_instructions()
+    def on_hover_enter(self, me):
+        super(ReactiveButton, self).on_hover_enter(me)
+        self._reaction_ref()
 
     def _reaction_ref(self):
-        if self._active:
-            return
         for child in self.children:
             if isinstance(child, Image):
                 child._coreimage.anim_reset(True)
                 child.anim_delay = 1/24
-        self._active = True
-
-    def _clear_instructions(self):
-        if not self._active:
-            return
-        for child in self.children:
-            if isinstance(child, Image):
-                # child._coreimage.anim_reset(True)
-                # child.anim_delay = -1
-                pass
-        self._active = False
 
 
-class CustomDropDown(DropDown):
-    # def __init__(self, **kwargs):
-    #     super(CustomDropDown, self).__init__(**kwargs)
-    #     Window.bind(mouse_pos=self.on_mouse_pos_on_button)
-    #
-    # def on_mouse_pos_on_button(self, *largs):
-    #     pos = self.to_widget(*largs[1])
-    #     if self.collide_point(*pos):
-    #         utils.set_cursor(constants.CURSOR_HAND)
-    #         return
-    #     utils.set_cursor(constants.CURSOR_ARROW)
-    pass
+class CustomDropDown(HoverBehavior, DropDown):
+    def on_hover_enter(self, me):
+        utils.set_cursor(constants.CURSOR_HAND)
+
+    def on_hover_update(self, me):
+        utils.set_cursor(constants.CURSOR_HAND)
+
+    def on_hover_leave(self, me):
+        utils.set_cursor(constants.CURSOR_ARROW)
 
 
 class Content(BoxLayout):

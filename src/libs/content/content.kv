@@ -5,17 +5,19 @@
     size_hint_x: None
     width: 100
     height: 60
-    Button:
+    on_hover_leave: self.dismiss
+
+    PointedButton:
         text: 'My first Item'
         size_hint_y: None
         height: 44
         on_release: root.select(self.text)
-    Button:
+    PointedButton:
         text: 'My first and half Item'
         size_hint_y: None
         height: 44
         on_release: root.select(self.text)
-    Button:
+    PointedButton:
         text: 'My second Item'
         size_hint_y: None
         height: 44
@@ -103,13 +105,13 @@
                         #Label:
                         #    text: 'Experimental' if useExperimental.active else 'Stable'
 
-                        ToggleButton:
+                        PointedToggleButton:
                             size_hint_y: None
                             size_hint_x: .7
                             height: 60
                             group: 'useExperimental'
                             text: 'Experimental'
-                        ToggleButton:
+                        PointedToggleButton:
                             size_hint_y: None
                             size_hint_x: .7
                             height: 60
@@ -158,23 +160,32 @@
                                 text_size: self.width, None
                                 text: 'Choose the world:'
 
-                        Button:
+                        PointedButton:
                             id: dropdown_main_button
-                            text: 'Choose World...'
+                            text: 'Choose World...  '
                             size_hint_y: None
                             size_hint_x: 1.45
                             height: 60
+                            #Image:
+                            #    id: dropdownarrow_gif
+                            #    source: 'res/images/icons8-pfeil_-ausklappen-72.gif'
+                            #    center: [self.parent.center[0] + 50, self.parent.center[1]]
+                            #    height: 30
+                            #    allow_stretch: False
+                            #    opacity: 1
+                            #    anim_loop: 1
+                            #    anim_delay: -1
 
                         ReactiveButton:
                             id: editWorldsListButton
                             size_hint_y: None
                             size_hint_x: 1.45
                             height: 60
-
+                            text: "         Edit Worlds..."
                             Image:
                                 id: edit_gif
                                 source: 'res/images/icons8-bearbeiten-ezgif.com-instagif-less-white.gif'
-                                center: self.parent.center
+                                center: [self.parent.center[0] - 50, self.parent.center[1]]
                                 height: 30
                                 allow_stretch: False
                                 opacity: 1
@@ -254,7 +265,7 @@
                 padding: [2,2]
                 #padding: [4,4]
 
-                Button:
+                PointedButton:
                     id: launch_button
 
                     background_normal: ''
