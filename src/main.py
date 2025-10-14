@@ -21,19 +21,17 @@ import os
 import sys
 from kivy.resources import resource_add_path
 from kivy.uix.gridlayout import GridLayout
-from kivy.core.window import Window
 from kivy.graphics import Color, Rectangle
 from kivy.uix.label import Label
 
 from kivy_garden.hover import (
     HoverManager,
-    HoverBehavior,
-    MotionCollideBehavior
+    HoverBehavior
 )
 
+from utils import set_cursor
 from src.libs.content.content import Content
-import src.libs.constants as constants
-from src.libs.utils import utils
+from constants import CURSOR_ARROW, CURSOR_HAND
 
 
 class HighlightLabel(HoverBehavior, Label):
@@ -42,10 +40,15 @@ class HighlightLabel(HoverBehavior, Label):
         self._instructions = []
 
     def on_hover_enter(self, me):
+        set_cursor(CURSOR_HAND)
         for uid, zones in self.refs.items():
             self._highlight_ref(uid)
 
+    def on_hover_update(self, me):
+        set_cursor(CURSOR_HAND)
+
     def on_hover_leave(self, me):
+        set_cursor(CURSOR_ARROW)
         self._clear_instructions()
 
     def _highlight_ref(self, name):
@@ -63,14 +66,12 @@ class HighlightLabel(HoverBehavior, Label):
             with self.canvas:
                 store(Rectangle(
                     pos=(box_x, box_y), size=(box_w, box_h)))
-        utils.set_cursor(constants.CURSOR_HAND)
 
     def _clear_instructions(self):
         rm = self.canvas.remove
         for instr in self._instructions:
             rm(instr)
         self._instructions = []
-        utils.set_cursor(constants.CURSOR_ARROW)
 
 
 class SatisfactoryAutomaticSynchronizeReloaded(GridLayout):
