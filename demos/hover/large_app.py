@@ -315,7 +315,7 @@ class HoverButton(HoverBehavior, ButtonBehavior, Label):
     background_color = AliasProperty(
         _get_background_color,
         bind=(
-            'state', 'hovered', 'normal_color', 'down_color','hovered_color'
+            'state', 'hovered', 'normal_color', 'down_color', 'hovered_color'
         )
     )
     normal_color = ColorProperty([0.3, 0.3, 0.3, 1.0])

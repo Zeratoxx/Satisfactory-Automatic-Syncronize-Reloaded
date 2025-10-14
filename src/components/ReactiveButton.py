@@ -15,4 +15,4 @@ class ReactiveButton(PointedButton):
         for child in self.children:
             if isinstance(child, Image):
                 child._coreimage.anim_reset(True)
-                child.anim_delay = 1/24
+                child.anim_delay = 1 / 24

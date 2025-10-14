@@ -10,5 +10,5 @@ from components import PointedButton
 
 
 class DirSelectDialog(FloatLayout):
-    select_dir = ObjectProperty(None)
-    cancel = ObjectProperty(None)
+    select_dir = ObjectProperty()
+    cancel = ObjectProperty()
