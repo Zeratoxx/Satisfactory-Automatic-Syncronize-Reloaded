@@ -1,73 +1,22 @@
 import os
 
-from kivy.core.window import Window
-from kivy.uix.image import Image
 from plyer import filechooser
-
 from kivy.uix.dropdown import DropDown
-from kivy.uix.pagelayout import PageLayout
 from kivy.uix.popup import Popup
-from kivy.uix.widget import Widget
-from kivy.properties import (
-    NumericProperty, ReferenceListProperty, ObjectProperty
-)
-from kivy.utils import rgba
-from kivy.vector import Vector
-from kivy.clock import Clock
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.button import Button
-from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.uix.textinput import TextInput
-from winioctlcon import F3_720_512
 
-import src.libs.constants as constants
-from src.libs.content.dialogs import EditWorldsDialog, DirSelectDialog
-from src.libs.utils import utils
+from kivy_garden.hover import HoverBehavior
 
-from kivy_garden.hover import (
-    HoverManager,
-    HoverBehavior,
-    MotionCollideBehavior
-)
+import constants as constants
+from content import EditWorldsDialog, DirSelectDialog
+import utils
 
+# ---- needed imports for kv file ---
 
-class PointedButton(HoverBehavior, Button):
-    def on_hover_enter(self, me):
-        utils.set_cursor(constants.CURSOR_HAND)
+# noinspection PyUnusedImports
+from components import PointedButton, PointedToggleButton, ReactiveButton
 
-    def on_hover_update(self, me):
-        utils.set_cursor(constants.CURSOR_HAND)
-
-    def on_hover_leave(self, me):
-        utils.set_cursor(constants.CURSOR_ARROW)
-
-
-class PointedToggleButton(HoverBehavior, ToggleButton):
-    def on_hover_enter(self, me):
-        utils.set_cursor(constants.CURSOR_HAND)
-
-    def on_hover_update(self, me):
-        utils.set_cursor(constants.CURSOR_HAND)
-
-    def on_hover_leave(self, me):
-        utils.set_cursor(constants.CURSOR_ARROW)
-
-
-class ReactiveButton(PointedButton):
-    def __init__(self, **kwargs):
-        super(ReactiveButton, self).__init__(**kwargs)
-
-    def on_hover_enter(self, me):
-        super(ReactiveButton, self).on_hover_enter(me)
-        self._reaction_ref()
-
-    def _reaction_ref(self):
-        for child in self.children:
-            if isinstance(child, Image):
-                child._coreimage.anim_reset(True)
-                child.anim_delay = 1/24
+# ----
 
 
 class CustomDropDown(HoverBehavior, DropDown):
@@ -81,15 +30,15 @@ class CustomDropDown(HoverBehavior, DropDown):
         utils.set_cursor(constants.CURSOR_ARROW)
 
 
-class Content(BoxLayout):
-
+class Home(BoxLayout):
     def __init__(self, **kwargs):
-        super(Content, self).__init__(**kwargs)
+        super(Home, self).__init__(**kwargs)
         dropdown = CustomDropDown()
 
         self.world_editor_popup = Popup(title="Edit worlds", content=EditWorldsDialog(confirm=self.confirm_world_list,
                                                                                       cancel=self.dismiss_popup),
-                                        size_hint=(0.9, 0.9), separator_color=rgba(229, 148, 69))
+                                        size_hint=constants.POPUP_SIZE_HINT,
+                                        separator_color=constants.POPUP_SEPARATOR_COLOR)
 
         # self.world_editor_popup.content.children[2].children[0].bind(on_release=self.switch_popup_content)
         self.world_editor_popup.content.children[2].children[0].bind(on_release=self.open_system_dir_chooser)
@@ -97,13 +46,14 @@ class Content(BoxLayout):
         self.dir_select_popup = Popup(title="Select directory",
                                       content=DirSelectDialog(select_dir=self.select_dir,
                                                               cancel=self.cancel_select_dir),
-                                      size_hint=(0.9, 0.9), separator_color=rgba(229, 148, 69))
+                                      size_hint=constants.POPUP_SIZE_HINT,
+                                      separator_color=constants.POPUP_SEPARATOR_COLOR)
         self._popup = self.world_editor_popup
 
         self.ids.dropdown_main_button.bind(on_release=dropdown.open)
         dropdown.bind(on_select=lambda instance, x: setattr(self.ids.dropdown_main_button, 'text', x))
 
-        # access the BoxLayout with the id "worldChoiceContainer" defined in content.kv and add main_button
+        # access the BoxLayout with the id “worldChoiceContainer" defined in content.kv and add main_button
 
     def second_init(self):
         self.ids.edit_gif._coreimage.anim_reset(False)

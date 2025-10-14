@@ -1,11 +1,12 @@
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, StringProperty
 
+# ---- needed imports for kv file ---
 
-class DirSelectDialog(FloatLayout):
-    select_dir = ObjectProperty(None)
-    cancel = ObjectProperty(None)
+# noinspection PyUnusedImports
+from components import PointedButton
+
+# ----
 
 
 class EditWorldsDialog(BoxLayout):

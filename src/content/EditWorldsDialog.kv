@@ -1,25 +1,5 @@
 #:kivy 2.3.0
 
-<DirSelectDialog>:
-    BoxLayout:
-        size: root.size
-        pos: root.pos
-        orientation: "vertical"
-        FileChooserListView:
-            id: filechooser
-
-        BoxLayout:
-            size_hint_y: None
-            height: 50
-            spacing: 5
-            Button:
-                text: "Cancel"
-                on_release: root.cancel()
-
-            Button:
-                text: "Select"
-                on_release: root.select_dir(filechooser.path, filechooser.selection)
-
 <EditWorldsDialog>:
     orientation: 'vertical'
     padding: 0, 10, 0, 0
@@ -32,7 +12,7 @@
         spacing: 10
 
         # bc of 'right-to-left' orientation of StackLayout, the first Widget is the most right one.
-        Button:
+        PointedButton:
             text: 'Add world...'
             size_hint_y: 1
             size_hint_x: None
@@ -65,9 +45,9 @@
         size_hint_y: None
         height: 50
         spacing: 5
-        Button:
+        PointedButton:
             text: "Cancel"
             on_release: root.cancel()
-        Button:
+        PointedButton:
             text: "Confirm"
             on_release: root.confirm()
