@@ -23,6 +23,15 @@
         height: 44
         on_release: root.select(self.text)
 
+<Tooltip>:
+    size_hint: None, None
+    size: self.texture_size[0]+5, self.texture_size[1]+5
+    canvas.before:
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        Rectangle:
+            size: self.size
+            pos: self.pos
 
 # ------------- CONTENT -------------
 <Home>:
@@ -44,7 +53,7 @@
 
             StackLayout:
                 orientation: 'lr-tb'
-                size_hint_y: .85
+                size_hint_y: .6
                 size_hint_x: 1
                 spacing: 10
                 padding: [15,15]
@@ -60,15 +69,14 @@
                     anchor_y: 'center'
                     anchor_x: 'center'
                     size_hint_y: .1
-                    size_hint_min_y: 60
+                    size_hint_min_y: 45
                     size_hint_max_y: 100
 
                     size_hint_x: 1
 
                     BoxLayout:
-                        size_hint_y: None
+                        size_hint_y: .9
                         size_hint_x: 1
-                        height: 60
                         padding: [0,0]
                         spacing: 10
                         # for debugging
@@ -90,31 +98,21 @@
                             anchor_x: 'left'
                             anchor_y: 'center'
                             padding: [15,0]
+                            size_hint_x: .8
 
                             Label:
-                                size_hint_y: None
-                                height: 60
+                                size_hint_y: 1
                                 text_size: self.width, None
                                 text: 'Which Build Version?'
 
-                        #Switch:
-                        #    id: useExperimental
-                        #    size_hint_y: None
-                        #    size_hint_x: .25
-                        #    active: False # gespeicherten Wert nutzen
-                        #Label:
-                        #    text: 'Experimental' if useExperimental.active else 'Stable'
-
                         PointedToggleButton:
-                            size_hint_y: None
+                            size_hint_y: 1
                             size_hint_x: .7
-                            height: 60
                             group: 'useExperimental'
                             text: 'Experimental'
                         PointedToggleButton:
-                            size_hint_y: None
+                            size_hint_y: 1
                             size_hint_x: .7
-                            height: 60
                             group: 'useExperimental'
                             text: 'Stable'
                             state: 'down' # gespeicherten Wert nutzen
@@ -138,13 +136,12 @@
                     anchor_x: 'center'
                     size_hint_y: .1
                     size_hint_x: 1
-                    size_hint_min_y: 60
+                    size_hint_min_y: 45
                     size_hint_max_y: 100
 
                     BoxLayout:
-                        size_hint_y: None
+                        size_hint_y: 1
                         size_hint_x: 1
-                        height: 60
                         padding: [0,0]
                         spacing: 10
                         id: worldChoiceContainer
@@ -153,19 +150,18 @@
                             anchor_x: 'left'
                             anchor_y: 'center'
                             padding: [15,0]
+                            size_hint_x: .98
 
                             Label:
-                                size_hint_y: None
-                                height: 60
+                                size_hint_y: 1
                                 text_size: self.width, None
                                 text: 'Choose the world:'
 
                         PointedButton:
                             id: dropdown_main_button
                             text: 'Choose World...  '
-                            size_hint_y: None
+                            size_hint_y: 1
                             size_hint_x: 1.45
-                            height: 60
                             #Image:
                             #    id: dropdownarrow_gif
                             #    source: 'res/images/icons8-pfeil_-ausklappen-72.gif'
@@ -176,16 +172,15 @@
                             #    anim_loop: 1
                             #    anim_delay: -1
 
-                        ReactiveButton:
+                        ReactiveButtonWithToolTip:
                             id: editWorldsListButton
-                            size_hint_y: None
-                            size_hint_x: 1.45
-                            height: 60
-                            text: "         Edit Worlds..."
+                            size_hint_y: 1
+                            size_hint_x: None
+                            size: [self.size[1]+5,self.size[1]]
                             Image:
                                 id: edit_gif
                                 source: 'res/images/icons8-bearbeiten-ezgif.com-instagif-less-white.gif'
-                                center: [self.parent.center[0] - 50, self.parent.center[1]]
+                                center: self.parent.center
                                 height: 30
                                 allow_stretch: False
                                 opacity: 1
@@ -250,10 +245,6 @@
                         height: 60
                         padding: [0,0]
                         spacing: 10
-
-                        DirSelectDialog:
-
-
 
             BoxLayout:
                 size_hint_y: .15

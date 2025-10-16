@@ -1,5 +1,9 @@
 import os
 
+from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.graphics import Color, Rectangle
+# from kivy.core.window import Window
 from plyer import filechooser
 from kivy.uix.dropdown import DropDown
 from kivy.uix.popup import Popup
@@ -14,9 +18,40 @@ import utils
 # ---- needed imports for kv file ---
 
 # noinspection PyUnusedImports
-from components import PointedButton, PointedToggleButton, ReactiveButton
+from components import PointedButton, PointedToggleButton, ReactiveButton, Tooltip
+
 
 # ----
+
+
+class ReactiveButtonWithToolTip(ReactiveButton):
+    def __init__(self, **kwargs):
+        super(ReactiveButtonWithToolTip, self).__init__(**kwargs)
+        self.tooltip = Tooltip(text="Edit Worlds...")
+
+    def on_hover_enter(self, me):
+        super(ReactiveButtonWithToolTip, self).on_hover_enter(me)
+        self.update_tooltip_pos(me)
+        self.display_tooltip()
+
+    def on_hover_leave(self, me):
+        super(ReactiveButtonWithToolTip, self).on_hover_leave(me)
+        self.close_tooltip()
+
+    def on_hover_update(self, me):
+        super(ReactiveButtonWithToolTip, self).on_hover_update(me)
+        print(f"update: {me.pos}")
+        self.update_tooltip_pos(me)
+
+    def update_tooltip_pos(self, me):
+        self.tooltip.pos = (me.pos[0] - self.tooltip.texture_size[0] / 2.3,
+                            me.pos[1] - self.tooltip.texture_size[1] * 3)
+
+    def close_tooltip(self, *args):
+        Window.remove_widget(self.tooltip)
+
+    def display_tooltip(self, *args):
+        Window.add_widget(self.tooltip)
 
 
 class CustomDropDown(HoverBehavior, DropDown):

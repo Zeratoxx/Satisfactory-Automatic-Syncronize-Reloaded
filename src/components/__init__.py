@@ -6,3 +6,5 @@ from .PointedButton import PointedButton
 from .PointedToggleButton import PointedToggleButton
 # noinspection PyUnusedImports
 from .ReactiveButton import ReactiveButton
+# noinspection PyUnusedImports
+from .Tooltip import Tooltip
