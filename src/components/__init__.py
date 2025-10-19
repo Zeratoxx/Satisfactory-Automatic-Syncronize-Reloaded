@@ -7,6 +7,6 @@ from .PointedToggleButton import PointedToggleButton
 # noinspection PyUnusedImports
 from .ReactiveButton import ReactiveButton
 # noinspection PyUnusedImports
-from .Tooltip import Tooltip
+from .ReactiveButtonWithToolTip import ReactiveButtonWithToolTip
 # noinspection PyUnusedImports
 from .CustomScrollView import CustomScrollView

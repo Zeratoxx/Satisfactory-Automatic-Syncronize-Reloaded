@@ -23,16 +23,6 @@
         height: 44
         on_release: root.select(self.text)
 
-<Tooltip>:
-    size_hint: None, None
-    size: self.texture_size[0]+5, self.texture_size[1]+5
-    canvas.before:
-        Color:
-            rgb: 0.2, 0.2, 0.2
-        Rectangle:
-            size: self.size
-            pos: self.pos
-
 # ------------- CONTENT -------------
 <Home>:
     # [padding_left, padding_top, padding_right, padding_bottom], [padding_horizontal, padding_vertical] or [padding]
