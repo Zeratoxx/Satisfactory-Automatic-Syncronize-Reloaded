@@ -51,12 +51,13 @@
             size_hint_max_y: 1300
             spacing: 15
 
-            StackLayout:
-                orientation: 'lr-tb'
-                size_hint_y: .6
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_y: .4
                 size_hint_x: 1
                 spacing: 10
                 padding: [15,15]
+                size_hint_max_y: 210
 
                 canvas.before:
                     Color:
@@ -187,74 +188,39 @@
                                 anim_loop: 1
                                 anim_delay: -1
 
-                AnchorLayout:
-                    anchor_y: 'center'
-                    anchor_x: 'center'
-                    size_hint_y: None
-                    size_hint_x: 1
-                    height: 4
+            BoxLayout:
+                size_hint_y: .45
+                size_hint_x: 1
+                padding: 10, 3, 0, 3
+                spacing: 0
 
-                    canvas:
-                        Color:
-                            rgba: rgba(63, 63, 63)
-                        Rectangle:
-                            pos: self.x, self.center_y - 1
-                            size: self.width, 2
+                canvas.before:
+                    Color:
+                        rgba: .15, .15, .15, .3
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
 
-                AnchorLayout:
-                    anchor_y: 'center'
-                    anchor_x: 'center'
-                    size_hint_y: .7
-                    size_hint_x: 1
-                    size_hint_min_y: 60
-                    #size_hint_max_y: 100
-
-                    BoxLayout:
+                ScrollView:
+                    do_scroll_x: False
+                    do_scroll_y: True
+                    bar_width: 4
+                    Label:
+                        id: console_log
                         size_hint_y: None
-                        size_hint_x: 1
-                        height: 60
+                        height: self.texture_size[1]
+                        text_size: self.width, None
                         padding: [0,0]
-                        spacing: 10
-                        id: worldEditContainer
-
-                AnchorLayout:
-                    anchor_y: 'center'
-                    anchor_x: 'center'
-                    size_hint_y: None
-                    size_hint_x: 1
-                    height: 4
-
-                    canvas:
-                        Color:
-                            rgba: rgba(63, 63, 63)
-                        Rectangle:
-                            pos: self.x, self.center_y - 1
-                            size: self.width, 2
-
-                AnchorLayout:
-                    anchor_y: 'center'
-                    anchor_x: 'center'
-                    size_hint_y: .7
-                    size_hint_x: 1
-                    size_hint_min_y: 60
-                    #size_hint_max_y: 100
-
-                    BoxLayout:
-                        size_hint_y: None
-                        size_hint_x: 1
-                        height: 60
-                        padding: [0,0]
-                        spacing: 10
+                        font_name: "res/fonts/JetBrainsMono-VariableFont_wght.ttf"
+                        color: 1, 1, 1, .4
+                        text: ""
 
             BoxLayout:
                 size_hint_y: .15
                 size_hint_x: 1
                 size_hint_min_y: 100
                 size_hint_max_y: 150
-                #padding: [0,0]
-                #padding: [1,1]
-                padding: [2,2]
-                #padding: [4,4]
+                padding: [0,0]
 
                 PointedButton:
                     id: launch_button

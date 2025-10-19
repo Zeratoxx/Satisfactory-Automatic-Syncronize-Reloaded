@@ -20,7 +20,6 @@ import utils
 # noinspection PyUnusedImports
 from components import PointedButton, PointedToggleButton, ReactiveButton, Tooltip
 
-
 # ----
 
 
@@ -40,7 +39,6 @@ class ReactiveButtonWithToolTip(ReactiveButton):
 
     def on_hover_update(self, me):
         super(ReactiveButtonWithToolTip, self).on_hover_update(me)
-        print(f"update: {me.pos}")
         self.update_tooltip_pos(me)
 
     def update_tooltip_pos(self, me):
@@ -91,8 +89,11 @@ class Home(BoxLayout):
         # access the BoxLayout with the id “worldChoiceContainer" defined in content.kv and add main_button
 
     def second_init(self):
+        # noinspection PyProtectedMember
         self.ids.edit_gif._coreimage.anim_reset(False)
         self.ids.editWorldsListButton.bind(on_release=self.show_edit_worlds)
+
+        self.ids.console_log.text = "Nothing happened yet.\nWaiting for launch."
 
     def dismiss_popup(self):
         self._popup.dismiss()
