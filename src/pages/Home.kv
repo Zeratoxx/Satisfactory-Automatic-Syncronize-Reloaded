@@ -202,11 +202,14 @@
                         size: self.size
 
                 ScrollView:
+                    id: console_log_scrollview
                     do_scroll_x: False
                     do_scroll_y: True
-                    bar_width: 4
+                    scroll_type: ['bars', 'content']
+                    scroll_wheel_distance: 50
                     Label:
                         id: console_log
+
                         size_hint_y: None
                         height: self.texture_size[1]
                         text_size: self.width, None

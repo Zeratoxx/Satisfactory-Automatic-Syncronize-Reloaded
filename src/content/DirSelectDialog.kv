@@ -5,17 +5,36 @@
         size: root.size
         pos: root.pos
         orientation: "vertical"
+        spacing: 10
+
+        Label:
+            id: current_path
+            halign: 'left'
+            valign: 'top'
+            text_size: self.width, None
+            size_hint: 1, None
+            canvas.before:
+                Color:
+                    rgba: 1, 0, 0, .3
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+
         FileChooserListView:
+            size_hint_y: .9
+            dirselect: True
             id: filechooser
+
 
         BoxLayout:
             size_hint_y: None
             height: 50
             spacing: 5
             PointedButton:
+                text: "Select"
+                on_release: root.select_dir(filechooser.path, filechooser.selection)
+            PointedButton:
                 text: "Cancel"
                 on_release: root.cancel()
 
-            PointedButton:
-                text: "Select"
-                on_release: root.select_dir(filechooser.path, filechooser.selection)
