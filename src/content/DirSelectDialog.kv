@@ -1,4 +1,5 @@
 #:kivy 2.3.0
+#: import SATISFACTORY_SAVED_FOLDER_PATH constants.SATISFACTORY_SAVED_FOLDER_PATH
 
 <DirSelectDialog>:
     BoxLayout:
@@ -10,18 +11,25 @@
         Label:
             id: current_path
             halign: 'left'
-            valign: 'top'
+            valign: 'middle'
             text_size: self.width, None
-            size_hint: 1, None
-            canvas.before:
-                Color:
-                    rgba: 1, 0, 0, .3
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
+            size_hint: 1, .15
+#            canvas.before:
+#                Color:
+#                    rgba: 1, 0, 0, .3
+#                Rectangle:
+#                    pos: self.pos
+#                    size: self.size
+
+        StackLayout:
+            id: location_selector
+            size_hint: 1, .1
+            LocationSelectionButton:
+                text: "Home"
+                on_release: root.change_drive(SATISFACTORY_SAVED_FOLDER_PATH)
 
         FileChooserListView:
-            size_hint_y: .9
+            size_hint_y: .75
             dirselect: True
             id: filechooser
 

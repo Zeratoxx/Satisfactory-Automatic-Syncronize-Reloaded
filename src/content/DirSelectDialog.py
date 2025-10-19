@@ -1,8 +1,10 @@
+import sys
 import os.path
 from pathlib import Path
 
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty
+from kivy.uix.stacklayout import StackLayout
 
 # ---- needed imports for kv file ---
 
@@ -11,6 +13,14 @@ from components import PointedButton
 
 
 # ----
+
+
+class LocationSelectionButton(PointedButton):
+    def __init__(self, **kwargs):
+        super(LocationSelectionButton, self).__init__(**kwargs)
+        self.size_hint_x = .166666666
+        self.size_hint_y = None
+        self.height = 40
 
 
 class DirSelectDialog(FloatLayout):
@@ -27,5 +37,20 @@ class DirSelectDialog(FloatLayout):
         self.ids.filechooser.bind(on_entries_cleared=self.update_current_dir_label)
         self.update_current_dir_label()
 
+        if sys.platform == 'win32':
+            import win32api
+
+            drives = win32api.GetLogicalDriveStrings()
+            drives = drives.split('\000')[:-1]
+            print(drives)
+            for drive in drives:
+                button = LocationSelectionButton(text=drive)
+                button.bind(on_release=self.change_drive)
+                self.ids.location_selector.add_widget(button)
+
     def update_current_dir_label(self, *largs):
         self.ids.current_path.text = self.ids.filechooser.path
+
+    def change_drive(self, callback):
+        self.ids.filechooser.path = str(
+            Path(os.path.expandvars(callback if isinstance(callback, str) else callback.text)).resolve())

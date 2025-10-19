@@ -22,7 +22,6 @@ import utils
 # noinspection PyUnusedImports
 from components import PointedButton, PointedToggleButton, ReactiveButton, ReactiveButtonWithToolTip, CustomScrollView
 
-
 # ----
 
 
@@ -47,8 +46,8 @@ class Home(BoxLayout):
                                         size_hint=constants.POPUP_SIZE_HINT,
                                         separator_color=constants.POPUP_SEPARATOR_COLOR)
 
-        self.world_editor_popup.content.children[2].children[0].bind(on_release=self.switch_popup_content)
-        # self.world_editor_popup.content.children[2].children[0].bind(on_release=self.open_system_dir_chooser)
+        # self.world_editor_popup.content.children[2].children[0].bind(on_release=self.switch_popup_content)
+        self.world_editor_popup.content.ids.addWorldButton.bind(on_release=self.switch_popup_content)
 
         default_path = os.path.expandvars(constants.SATISFACTORY_SAVED_FOLDER_PATH)
         parsed_default_path = str(Path(default_path).resolve())
@@ -85,22 +84,6 @@ class Home(BoxLayout):
 
     def open_popup(self):
         self._popup.open()
-
-    def open_system_dir_chooser(self, widget=None):
-        # TODO default path for other OS'es
-        # TODO fix default path on Windows
-        default_path = os.path.expandvars(constants.SATISFACTORY_SAVED_FOLDER_PATH)
-        parsed_default_path = str(Path(default_path).resolve())
-        print("default_path: " + default_path)
-        print("str(Path(default_path).resolve()): " + parsed_default_path)
-        # print("default_path: " + default_path)
-        path = filechooser.choose_dir(title="Select the directory which contains your world." + parsed_default_path,
-                                      path=parsed_default_path
-                                      )
-        if path is not None and len(path) != 0:
-            self.world_editor_popup.content.selected_dir = path[0]
-        else:
-            print("path empty")
 
     def switch_popup_content(self, widget=None):
         print("firing switch_popup_content")

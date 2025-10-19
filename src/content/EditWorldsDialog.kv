@@ -18,11 +18,26 @@
         height: 40
         spacing: 10
 
-        # bc of 'right-to-left' orientation of StackLayout, the first Widget is the most right one.
-        PointedButton:
-            text: 'Add world...'
+        ReactiveButtonWithToolTip:
+            id: addWorldButton
+            tooltip_text: "Add World..."
+            text: "+"
+            font_size: 28
             size_hint_y: 1
             size_hint_x: None
+            size: [self.size[1]+5,self.size[1]]
+#            Image:
+#                source: 'res/images/add.png'
+#                center: self.parent.center
+#                height: 30
+#                allow_stretch: False
+#                opacity: 1
+
+        # bc of 'right-to-left' orientation of StackLayout, the first Widget is the most right one.
+#        PointedButton:
+#            text: 'Add world...'
+#            size_hint_y: 1
+#            size_hint_x: None
 
         #Label:
         #    text: 'kek'
