@@ -3,6 +3,7 @@ from kivy.utils import rgba
 DEFAULT_WIDTH: str = '560'
 DEFAULT_HEIGHT: str = '600'
 DEFAULT_BAR_WIDTH: str = 8
+DEFAULT_SCROLL_WHEEL_DISTANCE: str = 50
 SATISFACTORY_SAVED_FOLDER_PATH: str = "${localappdata}/FactoryGame/Saved"
 CURSOR_ARROW: str = "arrow"
 CURSOR_HAND: str = "hand"

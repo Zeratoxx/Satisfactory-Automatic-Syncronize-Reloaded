@@ -1,5 +1,12 @@
 #:kivy 2.3.0
 
+<ListLabel>:
+    text_size: self.width, None
+    size_hint: 1, None
+    size: self.size[0], self.texture_size[1]
+#    padding: 0, 10, 10, 10
+    padding: 0, 10, 4, 10
+
 <EditWorldsDialog>:
     orientation: 'vertical'
     padding: 0, 10, 0, 0
@@ -29,17 +36,51 @@
         #            size: self.size
         #            pos: self.pos
 
+    CustomScrollView:
+#        canvas.before:
+#            Color:
+#                rgba: 0, 0, 1, .2
+#            Rectangle:
+#                size: self.size
+#                pos: self.pos
 
-    BoxLayout: # TODO RecycleView here with list of worlds as data
-        orientation: 'vertical'
-        id: worldEditList
+        GridLayout: # TODO RecycleView here with list of worlds as data
+            id: worldEditList
+            cols: 1
+            spacing: 10
+            size_hint_y: None
 
-        Label:
-            text: root.selected_dir
-        Label:
-            text: 'test2'
-        Label:
-            text: 'test3'
+#            canvas.before:
+#                Color:
+#                    rgba: 1, 0, 0, .2
+#                Rectangle:
+#                    size: self.size
+#                    pos: self.pos
+
+            ListLabel:
+                text: root.selected_dir
+            ListLabel:
+                text: 'test2'
+            ListLabel:
+                text: 'test3'
+            ListLabel:
+                text: 'test3'
+            ListLabel:
+                text: 'test3'
+            ListLabel:
+                text: 'test3'
+            ListLabel:
+                text: 'test3'
+            ListLabel:
+                text: 'test3'
+            ListLabel:
+                text: 'test3'
+            ListLabel:
+                text: 'test3'
+            ListLabel:
+                text: 'test4'
+            ListLabel:
+                text: 'test4'
 
     BoxLayout:
         size_hint_y: None

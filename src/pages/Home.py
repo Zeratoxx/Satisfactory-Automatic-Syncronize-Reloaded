@@ -4,6 +4,7 @@ from pathlib import Path
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.graphics import Color, Rectangle
+from kivy.properties import StringProperty
 # from kivy.core.window import Window
 from plyer import filechooser
 from kivy.uix.dropdown import DropDown
@@ -19,19 +20,23 @@ import utils
 # ---- needed imports for kv file ---
 
 # noinspection PyUnusedImports
-from components import PointedButton, PointedToggleButton, ReactiveButton, Tooltip
+from components import PointedButton, PointedToggleButton, ReactiveButton, Tooltip, CustomScrollView
 
 
 # ----
 
 
 class ReactiveButtonWithToolTip(ReactiveButton):
+    tooltip_text = StringProperty()
+
     def __init__(self, **kwargs):
         super(ReactiveButtonWithToolTip, self).__init__(**kwargs)
-        self.tooltip = Tooltip(text="Edit Worlds...")
+        self.tooltip = Tooltip(text=self.tooltip_text)
 
     def on_hover_enter(self, me):
         super(ReactiveButtonWithToolTip, self).on_hover_enter(me)
+        if not self.tooltip.text:
+            self.tooltip.text = self.tooltip_text
         self.update_tooltip_pos(me)
         self.display_tooltip()
 
@@ -100,69 +105,13 @@ class Home(BoxLayout):
         self.ids.editWorldsListButton.bind(on_release=self.show_edit_worlds)
 
         self.dir_select_popup.content.ids.filechooser.layout.ids.scrollview.scroll_type = ['bars', 'content']
-        self.dir_select_popup.content.ids.filechooser.layout.ids.scrollview.scroll_wheel_distance = 50
+        self.dir_select_popup.content.ids.filechooser.layout.ids.scrollview.scroll_wheel_distance = (
+            constants.DEFAULT_SCROLL_WHEEL_DISTANCE)
         self.dir_select_popup.content.ids.filechooser.layout.ids.scrollview.bar_width = constants.DEFAULT_BAR_WIDTH
 
-        self.ids.console_log_scrollview.bar_width= constants.DEFAULT_BAR_WIDTH
         # self.ids.console_log.text = "Nothing happened yet.\nWaiting for launch."
-        self.ids.console_log.text = ("Nothing happened yet.\nWaiting for launch.\n"
-                                     "Cum spatii cadunt, omnes galluses carpseris teres, dexter capioes.\n"
-                                     "Heu, castus hibrida!\n"
-                                     "Nuclear vexatum iacere de mirabilis demissio, visum ventus!\n"
-                                     "Clabulares accelerare, tanquam emeritis cacula.\n"
-                                     "Tatas assimilant, tanquam flavum impositio.\n"
-                                     "Est talis palus, cesaris.\n"
-                                     "Cur brodium peregrinationes?\n"
-                                     "Nunquam acquirere luba.\n"
-                                     "Pol, devirginato!\n"
-                                     "A falsis, coordinatae alter lamia.\n"
-                                     "Hippotoxotas mori!\n"
-                                     "Superbus, festus magisters diligenter locus de bi-color, lotus lapsus.\n"
-                                     "Genetrixs mori in camerarius hamburgum!\n"
-                                     "Pol, fatalis fraticinida!\n"
-                                     "Mensas sunt luras de mirabilis bulla.\n"
-                                     "Pol, mineralis!\n"
-                                     "Ollas peregrinatione in tolosa!\n"
-                                     "A falsis, clabulare domesticus abactus.\n"
-                                     "Cum advena ridetis, omnes assimilatioes consumere emeritis, domesticus gemnaes.\n"
-                                     "Ubi est superbus turpis?\n"
-                                     "Fatalis, varius deuss nunquam talem de nobilis, flavum racana.\n"
-                                     "Primus pars sapienter dignuss victrix est.\n"
-                                     "Nunquam desiderium particula.\n"
-                                     "Urbs cresceres, tanquam fatalis poeta.\n"
-                                     "Est barbatus eleates, cesaris.\n"
-                                     "Pol, exemplar!\n"
-                                     "Candidatuss sunt tumultumques de festus detrius.\n"
-                                     "Orgias persuadere in emeritis brigantium!\n"
-                                     "Compaters congregabo!\n"
-                                     "Ubi est camerarius exemplar?\n"
-                                     "Sunt rationees magicae fatalis, germanus demolitionees.\n"
-                                     "Heu, barbatus mons!\n"
-                                     "Castus, festus fidess superbe examinare de alter, neuter ausus.\n"
-                                     "Cur assimilatio peregrinatione?\n"
-                                     "Velox, castus abnobas una imperium de mirabilis, dexter triticum.\n"
-                                     "Rusticus luras ducunt ad hippotoxota.\n"
-                                     "Ecce.\n"
-                                     "Historia festus spatii est.\n"
-                                     "Eheu, albus idoleum!\n"
-                                     "Aonides de raptus vigil, tractare hibrida!\n"
-                                     "Est brevis nutrix, cesaris.\n"
-                                     "Calcarias peregrinationes, tanquam audax nuclear vexatum iacere.\n"
-                                     "Advena de fortis rumor, amor pars!\n"
-                                     "Peritus verpas ducunt ad brodium.\n"
-                                     "Cur poeta experimentum?\n"
-                                     "Pol, a bene indictio.\n"
-                                     "Nunquam convertam musa.\n"
-                                     "Accelerare aegre ducunt ad castus fides.\n"
-                                     "Est bi-color fortis, cesaris.\n"
-                                     "Lactas potus in oenipons!\n"
-                                     "Pol, a bene detrius, grandis luba!\n"
-                                     "Nixuss observare in noster cubiculum!\n"
-                                     "Ubi est varius onus?\n"
-                                     "Est grandis fermium, cesaris.\n"
-                                     "A falsis, cacula magnum terror.\n"
-                                     "Messis velox ducunt ad superbus classis.\n"
-                                     "Clemens lumen aegre imperiums itineris tramitem est.")
+        self.ids.console_log.text = (
+            "Nothing happened yet.\nWaiting for launch.\nCum spatii cadunt, omnes galluses carpseris teres, dexter capioes.\nHeu, castus hibrida!\nNuclear vexatum iacere de mirabilis demissio, visum ventus!\nClabulares accelerare, tanquam emeritis cacula.\nTatas assimilant, tanquam flavum impositio.\nEst talis palus, cesaris.\nCur brodium peregrinationes?\nNunquam acquirere luba.\nPol, devirginato!\nA falsis, coordinatae alter lamia.\nHippotoxotas mori!\nSuperbus, festus magisters diligenter locus de bi-color, lotus lapsus.\nGenetrixs mori in camerarius hamburgum!\nPol, fatalis fraticinida!\nMensas sunt luras de mirabilis bulla.\nPol, mineralis!\nOllas peregrinatione in tolosa!\nA falsis, clabulare domesticus abactus.\nCum advena ridetis, omnes assimilatioes consumere emeritis, domesticus gemnaes.\nUbi est superbus turpis?\nFatalis, varius deuss nunquam talem de nobilis, flavum racana.\nPrimus pars sapienter dignuss victrix est.\nNunquam desiderium particula.\nUrbs cresceres, tanquam fatalis poeta.\nEst barbatus eleates, cesaris.\nPol, exemplar!\nCandidatuss sunt tumultumques de festus detrius.\nOrgias persuadere in emeritis brigantium!\nCompaters congregabo!\nUbi est camerarius exemplar?\nSunt rationees magicae fatalis, germanus demolitionees.\nHeu, barbatus mons!\nCastus, festus fidess superbe examinare de alter, neuter ausus.\nCur assimilatio peregrinatione?\nVelox, castus abnobas una imperium de mirabilis, dexter triticum.\nRusticus luras ducunt ad hippotoxota.\nEcce.\nHistoria festus spatii est.\nEheu, albus idoleum!\nAonides de raptus vigil, tractare hibrida!\nEst brevis nutrix, cesaris.\nCalcarias peregrinationes, tanquam audax nuclear vexatum iacere.\nAdvena de fortis rumor, amor pars!\nPeritus verpas ducunt ad brodium.\nCur poeta experimentum?\nPol, a bene indictio.\nNunquam convertam musa.\nAccelerare aegre ducunt ad castus fides.\nEst bi-color fortis, cesaris.\nLactas potus in oenipons!\nPol, a bene detrius, grandis luba!\nNixuss observare in noster cubiculum!\nUbi est varius onus?\nEst grandis fermium, cesaris.\nA falsis, cacula magnum terror.\nMessis velox ducunt ad superbus classis.\nClemens lumen aegre imperiums itineris tramitem est.")
 
     def dismiss_popup(self):
         self._popup.dismiss()
@@ -208,12 +157,12 @@ class Home(BoxLayout):
         self._popup = self.dir_select_popup
         self.open_popup()
 
-    def select_dir(self, path, filename):
-        if filename is not None and filename is list and filename.__len__ > 0:
-            self.world_editor_popup.content.selected_dir = os.path.join(path, filename[0])
+    def select_dir(self, path, selectionList):
+        if selectionList is not None and isinstance(selectionList, list) and len(selectionList) > 0:
+            self.world_editor_popup.content.selected_dir = str(Path(selectionList[0]).resolve())
         else:
-            print("filename not given")
-            self.world_editor_popup.content.selected_dir = os.path.join(path)
+            print("Empty selection list")
+            self.world_editor_popup.content.selected_dir = str(Path(path))
         self.switch_popup_content()
 
     def cancel_select_dir(self):

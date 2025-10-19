@@ -175,6 +175,7 @@
 
                         ReactiveButtonWithToolTip:
                             id: editWorldsListButton
+                            tooltip_text: "Edit Worlds..."
                             size_hint_y: 1
                             size_hint_x: None
                             size: [self.size[1]+5,self.size[1]]
@@ -201,12 +202,8 @@
                         pos: self.pos
                         size: self.size
 
-                ScrollView:
+                CustomScrollView:
                     id: console_log_scrollview
-                    do_scroll_x: False
-                    do_scroll_y: True
-                    scroll_type: ['bars', 'content']
-                    scroll_wheel_distance: 50
                     Label:
                         id: console_log
 
