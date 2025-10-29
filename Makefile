@@ -31,10 +31,10 @@ endef
 export string2
 
 package-windows:
-	python -m PyInstaller --log-level=INFO "Satisfactory Automatic Synchronize Reloaded.spec" --noconfirm
+	python -m PyInstaller --log-level=INFO "SatisfactoryAutomaticSynchronizeReloaded.spec" --noconfirm
 
 #package-windows-onefile:
-#	python -m PyInstaller --log-level=INFO "Satisfactory Automatic Synchronize Reloaded.spec" --noconfirm --onefile --noconsole
+#	python -m PyInstaller --log-level=INFO "SatisfactoryAutomaticSynchronizeReloaded.spec" --noconfirm --onefile --noconsole
 
 #generate-windows-spec:
-#	python -m PyInstaller --log-level=INFO "Satisfactory Automatic Synchronize Reloaded.spec" --onefile --noconsole --name "Satisfactory Automatic Synchronize Reloaded" --noconfirm
+#	python -m PyInstaller --log-level=INFO "SatisfactoryAutomaticSynchronizeReloaded.spec" --onefile --noconsole --name "SatisfactoryAutomaticSynchronizeReloaded" --noconfirm
