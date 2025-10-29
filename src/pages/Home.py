@@ -6,7 +6,6 @@ from kivy.core.window import Window
 from kivy.graphics import Color, Rectangle
 from kivy.properties import StringProperty
 # from kivy.core.window import Window
-from plyer import filechooser
 from kivy.uix.dropdown import DropDown
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout

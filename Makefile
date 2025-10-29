@@ -33,8 +33,8 @@ export string2
 package-windows:
 	python -m PyInstaller --log-level=INFO "Satisfactory Automatic Synchronize Reloaded.spec" --noconfirm
 
-package-windows-onefile:
-	python -m PyInstaller --log-level=INFO "Satisfactory Automatic Synchronize Reloaded.spec" --noconfirm --onefile --noconsole
+#package-windows-onefile:
+#	python -m PyInstaller --log-level=INFO "Satisfactory Automatic Synchronize Reloaded.spec" --noconfirm --onefile --noconsole
 
 #generate-windows-spec:
 #	python -m PyInstaller --log-level=INFO "Satisfactory Automatic Synchronize Reloaded.spec" --onefile --noconsole --name "Satisfactory Automatic Synchronize Reloaded" --noconfirm
