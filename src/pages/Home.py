@@ -19,7 +19,8 @@ import utils
 # ---- needed imports for kv file ---
 
 # noinspection PyUnusedImports
-from components import PointedButton, PointedToggleButton, ReactiveButton, ReactiveButtonWithToolTip, CustomScrollView
+from components import PointedButton, PointedToggleButton, ReactiveButton, ReactiveButtonWithToolTip, \
+    CustomScrollView, PointedSpinner
 
 # ----
 
