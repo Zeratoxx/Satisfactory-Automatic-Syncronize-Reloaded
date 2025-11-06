@@ -1,27 +1,27 @@
 #:kivy 2.3.0
 
-<CustomDropDown>:
-    size_hint_y: None
-    size_hint_x: None
-    width: 100
-    height: 60
-    on_hover_leave: self.dismiss
-
-    PointedButton:
-        text: 'My first Item'
-        size_hint_y: None
-        height: 44
-        on_release: root.select(self.text)
-    PointedButton:
-        text: 'My first and half Item'
-        size_hint_y: None
-        height: 44
-        on_release: root.select(self.text)
-    PointedButton:
-        text: 'My second Item'
-        size_hint_y: None
-        height: 44
-        on_release: root.select(self.text)
+#<CustomDropDown>:
+#    size_hint_y: None
+#    size_hint_x: None
+#    width: 100
+#    height: 60
+#    on_hover_leave: self.dismiss
+#
+#    PointedButton:
+#        text: 'My first Item'
+#        size_hint_y: None
+#        height: 44
+#        on_release: root.select(self.text)
+#    PointedButton:
+#        text: 'My first and half Item'
+#        size_hint_y: None
+#        height: 44
+#        on_release: root.select(self.text)
+#    PointedButton:
+#        text: 'My second Item'
+#        size_hint_y: None
+#        height: 44
+#        on_release: root.select(self.text)
 
 # ------------- CONTENT -------------
 <Home>:
@@ -61,11 +61,26 @@
                     spacing: 10
                     id: worldChoiceContainer
 
-                    PointedButton:
-                        id: dropdown_main_button
-                        text: 'Choose World...  '
-                        size_hint_y: 1
-                        size_hint_x: 1.45
+                    PointedSpinner:
+                        id: world_chooser_spinner
+                        text: 'Choose World...'
+                        on_press: world_chooser_spinner_arrow_gif.anim_delay = 1/24
+                        on_press: world_chooser_spinner_arrow_gif._coreimage.anim_reset(True)
+                        Image:
+                            id: world_chooser_spinner_arrow_gif
+                            source: 'res/images/icons8-pfeil_-ausklappen-72-alphaWhite.gif'
+                            center: [self.parent.right - 30, self.parent.center[1]+2]
+                            size_hint_x: None
+                            size_hint_y: None
+                            size: [30, 30]
+                            allow_stretch: False
+                            opacity: 1
+                            anim_loop: 1
+                            anim_delay: -1
+
+#                    PointedButton:
+#                        id: dropdown_main_button
+#                        text: 'Choose World...  '
                         #Image:
                         #    id: dropdownarrow_gif
                         #    source: 'res/images/icons8-pfeil_-ausklappen-72.gif'
@@ -165,6 +180,28 @@
                     id: game-build
                     text: 'Stable'
                     values: ('Stable', 'Experimental')
+
+                    on_press: game_mode_chooser_spinner_arrow_gif.anim_delay = 1/24
+                    on_press: game_mode_chooser_spinner_arrow_gif._coreimage.anim_reset(True)
+                    Image:
+                        canvas.before:
+                            PushMatrix
+                            Rotate:
+                                angle: 180
+                                axis: 0, 0, 1
+                                origin: self.center
+                        canvas.after:
+                            PopMatrix
+                        id: game_mode_chooser_spinner_arrow_gif
+                        source: 'res/images/icons8-pfeil_-ausklappen-72-alphaWhite.gif'
+                        center: [self.parent.center[0], self.parent.center[1]+25]
+                        size_hint_x: None
+                        size_hint_y: None
+                        size: [30, 30]
+                        allow_stretch: False
+                        opacity: 1
+                        anim_loop: 1
+                        anim_delay: -1
 
                 PointedButton:
                     id: launch_button

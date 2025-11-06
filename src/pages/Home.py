@@ -6,7 +6,7 @@ from kivy.core.window import Window
 from kivy.graphics import Color, Rectangle
 from kivy.properties import StringProperty
 # from kivy.core.window import Window
-from kivy.uix.dropdown import DropDown
+# from kivy.uix.dropdown import DropDown
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 
@@ -22,24 +22,25 @@ import utils
 from components import PointedButton, PointedToggleButton, ReactiveButton, ReactiveButtonWithToolTip, \
     CustomScrollView, PointedSpinner
 
+
 # ----
 
 
-class CustomDropDown(HoverBehavior, DropDown):
-    def on_hover_enter(self, me):
-        utils.set_cursor(constants.CURSOR_HAND)
-
-    def on_hover_update(self, me):
-        utils.set_cursor(constants.CURSOR_HAND)
-
-    def on_hover_leave(self, me):
-        utils.set_cursor(constants.CURSOR_ARROW)
+# class CustomDropDown(HoverBehavior, DropDown):
+#     def on_hover_enter(self, me):
+#         utils.set_cursor(constants.CURSOR_HAND)
+#
+#     def on_hover_update(self, me):
+#         utils.set_cursor(constants.CURSOR_HAND)
+#
+#     def on_hover_leave(self, me):
+#         utils.set_cursor(constants.CURSOR_ARROW)
 
 
 class Home(BoxLayout):
     def __init__(self, **kwargs):
         super(Home, self).__init__(**kwargs)
-        dropdown = CustomDropDown()
+        # dropdown = CustomDropDown()
 
         self.world_editor_popup = Popup(title="Edit worlds", content=EditWorldsDialog(confirm=self.confirm_world_list,
                                                                                       cancel=self.dismiss_popup),
@@ -60,8 +61,9 @@ class Home(BoxLayout):
 
         self._popup = self.world_editor_popup
 
-        self.ids.dropdown_main_button.bind(on_release=dropdown.open)
-        dropdown.bind(on_select=lambda instance, x: setattr(self.ids.dropdown_main_button, 'text', x))
+        # self.ids.dropdown_main_button.bind(on_release=dropdown.open)
+        # dropdown.bind(on_select=lambda instance, x: setattr(self.ids.dropdown_main_button, 'text', x))
+        self.ids.world_chooser_spinner.values = ['My first Item', 'My first and half Item', 'My second Item']
 
         # access the BoxLayout with the id “worldChoiceContainer" defined in content.kv and add main_button
 
