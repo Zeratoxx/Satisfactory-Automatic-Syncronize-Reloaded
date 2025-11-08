@@ -68,8 +68,8 @@
                         on_press: world_chooser_spinner_arrow_gif._coreimage.anim_reset(True)
                         Image:
                             id: world_chooser_spinner_arrow_gif
-                            source: 'res/images/icons8-pfeil_-ausklappen-72-alphaWhite.gif'
-                            center: [self.parent.right - 30, self.parent.center[1]+2]
+                            source: 'res/images/icons8-pfeil_-ausklappen-windows-72-alphaWhite.gif'
+                            center: [self.parent.right - 30, self.parent.center[1]]
                             size_hint_x: None
                             size_hint_y: None
                             size: [30, 30]
@@ -99,9 +99,10 @@
                         size: [self.size[1]+5,self.size[1]]
                         Image:
                             id: edit_gif
-                            source: 'res/images/icons8-bearbeiten-ezgif.com-instagif-less-white.gif'
+                            source: 'res/images/icons8-bearbeiten-windows-96-alphaWhite.gif'
                             center: self.parent.center
-                            height: 30
+                            height: self.parent.size[1] - 20
+#                            height: 30
                             allow_stretch: False
                             opacity: 1
                             anim_loop: 1
@@ -134,11 +135,23 @@
                         spacing: 10
                         TextInput:
                             text: 'Edit here!'
-                        Button:
-                            size_hint_x: None
-                            size: [self.size[1]+10,self.size[1]]
-                            text: 'Save'
 
+
+                        ReactiveButtonWithToolTip:
+                            id: saveCommitMessageButton
+                            tooltip_text: "Save Message"
+                            size_hint_y: 1
+                            size_hint_x: None
+                            size: [self.size[1]+5, self.size[1]]
+                            Image:
+                                id: save_gif
+                                source: 'res/images/icons8-speichern-windows-96-alphaWhite.gif'
+                                center: self.parent.center
+                                height: self.parent.size[1] - 20
+                                allow_stretch: False
+                                opacity: 1
+                                anim_loop: 1
+                                anim_delay: -1
 
             BoxLayout:
                 size_hint_y: .5
@@ -178,6 +191,7 @@
                     size_hint_x: None
                     size: [self.size[1]+10,self.size[1]]
                     id: game-build
+                    padding: 0, 17, 0, 0
                     text: 'Stable'
                     values: ('Stable', 'Experimental')
 
@@ -193,8 +207,8 @@
                         canvas.after:
                             PopMatrix
                         id: game_mode_chooser_spinner_arrow_gif
-                        source: 'res/images/icons8-pfeil_-ausklappen-72-alphaWhite.gif'
-                        center: [self.parent.center[0], self.parent.center[1]+25]
+                        source: 'res/images/icons8-pfeil_-ausklappen-windows-72-alphaWhite.gif'
+                        center: [self.parent.center[0], self.parent.center[1]+16]
                         size_hint_x: None
                         size_hint_y: None
                         size: [30, 30]
