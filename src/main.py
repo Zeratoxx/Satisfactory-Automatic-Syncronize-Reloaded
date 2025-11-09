@@ -7,11 +7,11 @@ from constants import DEFAULT_WIDTH, DEFAULT_HEIGHT
 
 Config.set('kivy', 'desktop', '1')
 Config.set('kivy', 'exit_on_escape', '0')
+Config.set('kivy', 'window_icon', 'res/images/icons8-zufriedenstellend-256.png')
 Config.set('graphics', 'width', DEFAULT_WIDTH)
 Config.set('graphics', 'height', DEFAULT_HEIGHT)
 Config.set('graphics', 'minimum_width', DEFAULT_WIDTH)
 Config.set('graphics', 'minimum_height', DEFAULT_HEIGHT)
-# Config.set('graphics', 'resizable', '0')
 Config.set('graphics', 'position', 'auto')
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
@@ -41,6 +41,7 @@ class SatisfactoryAutomaticSynchronizeReloaded(GridLayout):
 class MainApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.profile = None
         self.hover_manager = HoverManager()
 
     def build(self):
