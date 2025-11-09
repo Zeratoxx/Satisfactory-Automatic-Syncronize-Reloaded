@@ -9,3 +9,5 @@ class World:
         except FileNotFoundError as e:
             raise FileNotFoundError(
                 f"At creating world entry for \"{name}\": filepath \"{path}\" was not found!\n" + str(e))
+
+        self.updated_timestamp = self.sanitized_folder_path.stat().st_mtime
