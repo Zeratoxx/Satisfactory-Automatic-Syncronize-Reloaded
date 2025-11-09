@@ -4,7 +4,6 @@ from pathlib import Path
 
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty
-from kivy.uix.stacklayout import StackLayout
 
 # ---- needed imports for kv file ---
 
@@ -39,10 +38,9 @@ class DirSelectDialog(FloatLayout):
 
         if sys.platform == 'win32':
             import win32api
-
             drives = win32api.GetLogicalDriveStrings()
             drives = drives.split('\000')[:-1]
-            print(drives)
+            print(drives)  # TODO remove
             for drive in drives:
                 button = LocationSelectionButton(text=drive)
                 button.bind(on_release=self.change_drive)

@@ -11,9 +11,9 @@
 
         BoxLayout:
             orientation: 'vertical'
+            id: content_wrapper
             size_hint_min_x: 530
             size_hint_min_y: 430
-            size_hint_max_x: 900
             size_hint_max_y: 1300
             spacing: 15
 
@@ -143,7 +143,7 @@
                     size_hint_x: None
                     size: [self.size[1]+10,self.size[1]]
                     id: game-build
-                    padding: 0, 17, 0, 0
+                    padding: 0, 10, 0, 0
                     text: 'Stable'
                     values: ('Stable', 'Experimental')
 
@@ -160,7 +160,7 @@
                             PopMatrix
                         id: game_mode_chooser_spinner_arrow_gif
                         source: 'res/images/icons8-pfeil_-ausklappen-windows-72-alphaWhite.gif'
-                        center: [self.parent.center[0], self.parent.center[1]+17]
+                        center: [self.parent.center[0], self.parent.center[1]+24]
                         size_hint_x: None
                         size_hint_y: None
                         size: [30, 30]
