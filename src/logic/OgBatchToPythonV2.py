@@ -3,7 +3,6 @@ import platform
 import shutil
 import subprocess
 import time
-import zipfile
 import logging
 import psutil
 import enum
@@ -72,15 +71,6 @@ def copy_saves(src: str, dst: str):
             shutil.copy(os.path.join(src, file), dst)
     logging.info("Savegames copied.")
 
-def compress_saves(src: str, zip_path: str):
-    ensure_dir(os.path.dirname(zip_path))
-    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-        for root, _, files in os.walk(src):
-            for file in files:
-                if file.endswith(".sav"):
-                    zf.write(os.path.join(root, file), arcname=file)
-    logging.info("Savegames compressed into zip.")
-
 def start_game(use_experimental: bool, os_type: OSType):
     if os_type == OSType.WINDOWS:
         app = "CrabTest" if use_experimental else "CrabEA"
@@ -127,8 +117,6 @@ def main():
 
     # Synchronisation
     copy_saves(repo_path, os.path.join(cfg.base_path, cfg.which_saved))
-    compress_saves(os.path.join(cfg.base_path, cfg.which_saved),
-                   os.path.join(repo_path, "savpackage.zip"))
 
     # Git commit & push
     run_git_command(repo_path, ["add", "."])
