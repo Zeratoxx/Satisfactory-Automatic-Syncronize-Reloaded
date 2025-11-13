@@ -14,12 +14,14 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()]
 )
 
+
 # --- Enum für OS Types ---
 class OSType(enum.Enum):
     WINDOWS = "Windows"
     LINUX = "Linux"
     MAC = "Mac"
     UNKNOWN = "Unknown"
+
 
 def detect_os() -> OSType:
     system = platform.system().lower()
@@ -32,8 +34,10 @@ def detect_os() -> OSType:
     else:
         return OSType.UNKNOWN
 
+
 OS_TYPE = detect_os()
 logging.info(f"Detected OS: {OS_TYPE.value}")
+
 
 # --- Konfiguration ---
 class Config:
@@ -50,9 +54,11 @@ class Config:
     save_world_choice_file = "lastWorldChoice.txt"
     logs_dir = os.path.join(base_path, "Logs")
 
+
 # --- Hilfsfunktionen ---
 def ensure_dir(path: str):
     os.makedirs(path, exist_ok=True)
+
 
 def run_git_command(repo_path: str, command: list[str]):
     if os.path.exists(os.path.join(repo_path, ".git")):
@@ -64,12 +70,14 @@ def run_git_command(repo_path: str, command: list[str]):
     else:
         logging.warning("Not a git repository.")
 
+
 def copy_saves(src: str, dst: str):
     ensure_dir(dst)
     for file in os.listdir(src):
         if file.endswith(".sav"):
             shutil.copy(os.path.join(src, file), dst)
     logging.info("Savegames copied.")
+
 
 def start_game(use_experimental: bool, os_type: OSType):
     if os_type == OSType.WINDOWS:
@@ -82,6 +90,7 @@ def start_game(use_experimental: bool, os_type: OSType):
         logging.warning("Game start not implemented for macOS. Use Epic Launcher for Mac.")
     else:
         logging.error("Unsupported OS type.")
+
 
 def wait_for_game(exe_name: str, interval: int):
     started = False
@@ -99,6 +108,7 @@ def wait_for_game(exe_name: str, interval: int):
             else:
                 logging.info("Game not yet started...")
                 time.sleep(interval)
+
 
 # --- Hauptablauf ---
 def main():
@@ -124,6 +134,7 @@ def main():
     run_git_command(repo_path, ["push"])
 
     logging.info("Complete. Closing...")
+
 
 if __name__ == "__main__":
     main()

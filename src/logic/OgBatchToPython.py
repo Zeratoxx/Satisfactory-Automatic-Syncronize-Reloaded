@@ -4,6 +4,7 @@ import subprocess
 import shutil
 import time
 
+
 # --- Betriebssystem-Erkennung ---
 def get_os_type():
     system = platform.system().lower()
@@ -15,6 +16,7 @@ def get_os_type():
         return "Mac"
     else:
         return "Unknown"
+
 
 OS_TYPE = get_os_type()
 print(f"Detected OS: {OS_TYPE}")
@@ -34,6 +36,7 @@ saveChoiceFile = "lastChoice.txt"
 saveWorldChoiceFile = "lastWorldChoice.txt"
 searchVal = "rejected"
 
+
 # --- Hilfsfunktionen ---
 def run_command(cmd):
     """Führt einen Shell-Befehl aus und gibt die Ausgabe zurück."""
@@ -44,14 +47,17 @@ def run_command(cmd):
         print(f"Error running command {cmd}: {e}")
         return ""
 
+
 def ensure_dir(path):
     if not os.path.exists(path):
         os.makedirs(path)
+
 
 # --- Beispiel: Datei prüfen ---
 if not os.path.exists(os.path.join(PATHTOSAVED, nameOfWorldlistFile)):
     print(f"Cannot find {nameOfWorldlistFile}. Please set it up correctly.")
     exit(1)
+
 
 # --- Beispiel: Git Pull ---
 def git_pull(repo_path):
@@ -60,6 +66,7 @@ def git_pull(repo_path):
         run_command("git pull")
     else:
         print("This is not a git repository. Cannot pull.")
+
 
 # --- Beispiel: Spiel starten ---
 def start_game(useExperimental):
@@ -70,6 +77,7 @@ def start_game(useExperimental):
             run_command('start com.epicgames.launcher://apps/CrabTest?action=launch')
     elif OS_TYPE in ["Linux", "Mac"]:
         print("Game start not implemented for this OS – please adapt manually.")
+
 
 # --- Beispiel: Prozess überwachen ---
 def check_if_running(exeName):
@@ -85,6 +93,7 @@ def check_if_running(exeName):
     else:
         print("Process monitoring not implemented for non-Windows systems.")
 
+
 # --- Beispiel: Synchronisation ---
 def sync_saves(repo_path):
     print(f"Working with {os.path.join(PATHTOSAVED, whichSaved)} ...")
@@ -95,6 +104,7 @@ def sync_saves(repo_path):
             shutil.copy(os.path.join(repo_path, file), os.path.join(PATHTOSAVED, whichSaved))
     print("Savegames synchronized.")
 
+
 # --- Hauptablauf ---
 def main():
     print("Starting script...")
@@ -104,6 +114,7 @@ def main():
     check_if_running(exeName)
     sync_saves(repo_path)
     print("Complete. Closing...")
+
 
 if __name__ == "__main__":
     main()
