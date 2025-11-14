@@ -3,8 +3,6 @@ import shutil
 import logging
 import enum
 import platform
-from typing import Literal
-
 import psutil
 import asyncio
 import json
@@ -112,7 +110,7 @@ class WorldManager:
             logging.warning("No worlds database file found. Starting empty.")
             self.worlds = []
             return
-        async with asyncio.to_thread(open, self.cfg.worlds_file, Literal['r'], encoding="utf-8") as f:
+        async with asyncio.to_thread(open, self.cfg.worlds_file, 'r', encoding="utf-8") as f:
             data = json.load(f)
         self.worlds = [World.from_dict(w, self.cfg.base_path) for w in data]
         logging.info(f"Loaded {len(self.worlds)} worlds from database.")
@@ -165,8 +163,8 @@ async def start_game(use_experimental: bool, os_type: OSType):
     if os_type == OSType.WINDOWS:
         app = "CrabTest" if use_experimental else "CrabEA"
         logging.info(f"Starting game via Epic Launcher: {app}")
-        await asyncio.to_thread(subprocess.run, ["start", f"com.epicgames.launcher://apps/{app}?action=launch"],
-                                shell=True)
+        await asyncio.to_thread(asyncio.subprocess.create_subprocess_shell,
+                                f"start com.epicgames.launcher://apps/{app}?action=launch")
     elif os_type == OSType.LINUX:
         logging.info("Linux detected. Please start the game manually (Epic Launcher via Wine/Proton).")
     elif os_type == OSType.MAC:
