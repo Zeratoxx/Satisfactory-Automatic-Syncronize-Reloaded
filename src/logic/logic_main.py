@@ -4,7 +4,7 @@ import asyncio
 from logic.Config import Config
 from logic.WorldManager import WorldManager
 from logic.menu import menu
-from logic.os_utils import detect_os
+from logic.utils_os import detect_os
 
 
 async def main():

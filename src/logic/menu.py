@@ -2,10 +2,10 @@ import logging
 import os
 
 from logic.Config import Config
-from logic.stdin_utils import prompt, prompt_with_default
+from logic.utils_stdin import prompt, prompt_with_default
 from logic.WorldManager import WorldManager
-from logic.game_utils import start_game, wait_for_game
-from logic.git_utils import git_pull, git_commit_and_push
+from logic.utils_game import start_game, wait_for_game
+from logic.utils_git import git_pull, git_commit_and_push
 
 
 async def menu(manager: WorldManager, cfg: Config):
