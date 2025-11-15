@@ -2,7 +2,7 @@ import logging
 import os
 
 from logic.Config import Config
-from logic.TO_BE_DELETED_stdin_utils import prompt, prompt_with_default
+from logic.stdin_utils import prompt, prompt_with_default
 from logic.WorldManager import WorldManager
 from logic.game_utils import start_game, wait_for_game
 from logic.git_utils import git_pull, git_commit_and_push
