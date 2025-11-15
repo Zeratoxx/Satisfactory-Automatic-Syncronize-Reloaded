@@ -277,7 +277,7 @@ async def menu(manager: WorldManager, cfg: Config):
         print("3) Welt bearbeiten (Änderungen werden NACH Bestätigung gespeichert)")
         print("4) Welt löschen")
         print("5) Beenden")
-        print("Hinweis: Du kannst jederzeit 'q' eingeben, um sofort zu beenden.")
+        print("Hinweis: 'z' = Zurück ins Hauptmenü, 'q' = Sofort beenden")
 
         choice = input("Bitte Auswahl eingeben: ").strip().lower()
         if choice == "q":
@@ -316,10 +316,13 @@ async def menu(manager: WorldManager, cfg: Config):
             for idx, w in enumerate(worlds, start=1):
                 print(f"{idx}) {w.name} | Pfad: {w.path} | Saves: {w.save_count} | Größe: {w.size_mb} MB")
 
-            sel_raw = input("Nummer der Welt auswählen (oder 'q' zum Beenden): ").strip().lower()
+            sel_raw = input("Nummer der Welt auswählen ('z'=Zurück, 'q'=Beenden): ").strip().lower()
             if sel_raw == "q":
                 print("Beende Programm...")
                 break
+            if sel_raw == "z":
+                continue
+
             try:
                 sel = int(sel_raw)
                 chosen_world = worlds[sel - 1]
@@ -349,7 +352,7 @@ async def menu(manager: WorldManager, cfg: Config):
 
             logging.info("Welt-Synchronisation abgeschlossen.")
 
-        # --- Welt bearbeiten (mit Speichern nach Bestätigung) ---
+        # --- Welt bearbeiten ---
         elif choice == "3":
             worlds = manager.list_worlds()
             if not worlds:
@@ -360,10 +363,13 @@ async def menu(manager: WorldManager, cfg: Config):
             for idx, w in enumerate(worlds, start=1):
                 print(f"{idx}) {w.name} | Pfad: {w.path}")
 
-            sel_raw = input("Nummer der Welt zum Bearbeiten (oder 'q' zum Beenden): ").strip().lower()
+            sel_raw = input("Nummer der Welt zum Bearbeiten ('z'=Zurück, 'q'=Beenden): ").strip().lower()
             if sel_raw == "q":
                 print("Beende Programm...")
                 break
+            if sel_raw == "z":
+                continue
+
             try:
                 sel = int(sel_raw)
                 chosen_world = worlds[sel - 1]
@@ -371,7 +377,7 @@ async def menu(manager: WorldManager, cfg: Config):
                 print("Ungültige Auswahl.")
                 continue
 
-            print("\nBearbeiten (leerlassen, um aktuellen Wert zu behalten; 'q' zum Beenden):")
+            print("\nBearbeiten (leerlassen = behalten, 'q'=Beenden):")
             try:
                 new_name = prompt_with_default("Neuer Name", chosen_world.name)
                 new_path = prompt_with_default("Neuer Pfad", chosen_world.path)
@@ -379,37 +385,18 @@ async def menu(manager: WorldManager, cfg: Config):
             except SystemExit:
                 break
 
-            # Änderungen anzeigen und bestätigen
             print("\nÄnderungen zur Bestätigung:")
             print(f"Name: {chosen_world.name} -> {new_name}")
             print(f"Pfad: {chosen_world.path} -> {new_path}")
             print(f"Beschreibung: {chosen_world.description} -> {new_desc}")
-            confirm = input("Änderungen speichern? (j/n, 'q' zum Beenden): ").strip().lower()
+            confirm = input("Änderungen speichern? (j/n, 'z'=Zurück, 'q'=Beenden): ").strip().lower()
             if confirm == "q":
                 print("Beende Programm...")
                 break
-            if confirm != "j":
+            if confirm == "z" or confirm != "j":
                 print("Bearbeiten abgebrochen. Keine Änderungen gespeichert.")
                 continue
 
-            # Validierung
-            if new_name != chosen_world.name and any(w.name == new_name for w in worlds):
-                print(f"Name '{new_name}' existiert bereits. Änderungen nicht gespeichert.")
-                continue
-            if not os.path.isdir(new_path):
-                create = input("Neuer Pfad existiert nicht. Ordner anlegen? (j/n): ").strip().lower()
-                if create == "j":
-                    try:
-                        os.makedirs(new_path, exist_ok=True)
-                        print(f"Ordner erstellt: {new_path}")
-                    except Exception as e:
-                        print(f"Fehler beim Erstellen des Ordners: {e}")
-                        continue
-                else:
-                    print("Ungültiger Pfad. Änderungen nicht gespeichert.")
-                    continue
-
-            # Speichern
             chosen_world.name = new_name
             chosen_world.path = new_path
             chosen_world.description = new_desc
@@ -427,10 +414,13 @@ async def menu(manager: WorldManager, cfg: Config):
             for idx, w in enumerate(worlds, start=1):
                 print(f"{idx}) {w.name} | Pfad: {w.path}")
 
-            sel_raw = input("Nummer der Welt zum Löschen (oder 'q' zum Beenden): ").strip().lower()
+            sel_raw = input("Nummer der Welt zum Löschen ('z'=Zurück, 'q'=Beenden): ").strip().lower()
             if sel_raw == "q":
                 print("Beende Programm...")
                 break
+            if sel_raw == "z":
+                continue
+
             try:
                 sel = int(sel_raw)
                 chosen_world = worlds[sel - 1]
@@ -439,16 +429,17 @@ async def menu(manager: WorldManager, cfg: Config):
                 continue
 
             confirm = input(
-                f"Soll die Welt '{chosen_world.name}' wirklich gelöscht werden? (j/n, 'q' zum Beenden): ").strip().lower()
+                f"Soll die Welt '{chosen_world.name}' wirklich gelöscht werden? (j/n, 'z'=Zurück, 'q'=Beenden): ").strip().lower()
             if confirm == "q":
                 print("Beende Programm...")
                 break
-            if confirm == "j":
-                manager.worlds.remove(chosen_world)
-                await manager.save_worlds()
-                print(f"Welt '{chosen_world.name}' wurde gelöscht.")
-            else:
+            if confirm == "z" or confirm != "j":
                 print("Löschen abgebrochen.")
+                continue
+
+            manager.worlds.remove(chosen_world)
+            await manager.save_worlds()
+            print(f"Welt '{chosen_world.name}' wurde gelöscht.")
 
         # --- Beenden ---
         elif choice == "5":
