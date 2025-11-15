@@ -1,11 +1,14 @@
+import asyncio
 import logging
 import os
+
+from git import Repo
 
 from logic.Config import Config
 from logic.utils_stdin import prompt, prompt_with_default
 from logic.WorldManager import WorldManager
-from logic.utils_game import start_game, wait_for_game
-from logic.utils_git import git_pull, git_commit_and_push
+from logic.RunController import RunController
+from logic.GitRepository import GitRepository
 
 
 async def menu(manager: WorldManager, cfg: Config):
@@ -71,15 +74,18 @@ async def menu(manager: WorldManager, cfg: Config):
 
             logging.info(f"Chosen world: {chosen_world}")
 
+            git_repo = GitRepository(await asyncio.to_thread(Repo, chosen_world.path))
+
             # Git Pull (falls Repo)
-            await git_pull(chosen_world.path)
+            await git_repo.git_pull()
 
             # Spiel starten
             use_experimental = False
-            await start_game(use_experimental, cfg.os_type)
+            run_controller = RunController(cfg)
+            await run_controller.start_game(use_experimental)
 
             # Warten bis Spiel beendet
-            await wait_for_game(cfg.executable_name, cfg.check_interval)
+            await run_controller.wait_for_game_closed()
 
             # Savegames synchronisieren und Metadaten aktualisieren
             destination = os.path.join(cfg.base_path, cfg.which_saved)
@@ -87,7 +93,7 @@ async def menu(manager: WorldManager, cfg: Config):
             await manager.update_world_metadata(chosen_world)
 
             # Git Commit & Push (falls Repo)
-            await git_commit_and_push(chosen_world.path, f"Spielupdate {cfg.username} ({chosen_world.last_played})")
+            await git_repo.git_commit_and_push(f"Spielupdate {cfg.username} ({chosen_world.last_played})")
 
             logging.info("Welt-Synchronisation abgeschlossen.")
 
