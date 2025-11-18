@@ -1,5 +1,8 @@
 import asyncio
 import logging
+from datetime import datetime, timezone
+import socket
+import os
 
 from git import Repo, GitCommandError
 
@@ -7,6 +10,14 @@ from git import Repo, GitCommandError
 class GitRepository:
     def __init__(self, repo: Repo):
         self.repo: Repo = repo
+
+    @staticmethod
+    def build_conventional_commit(base_message: str, commit_type: str = "update") -> str:
+        user = os.environ.get("USERNAME") or os.environ.get("USER")
+        host = socket.gethostname()
+        # ISO 8601 mit Offset, ohne "Z"
+        now = datetime.now().astimezone().isoformat(timespec="seconds")
+        return f"{commit_type}({user}): {base_message}\n\n{now} from {host}"
 
     async def git_pull(self):
         try:

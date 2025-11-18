@@ -2,6 +2,7 @@ import logging
 import asyncio
 
 from logic.Config import Config
+from logic.ConfigManager import ConfigManager
 from logic.WorldManager import WorldManager
 from logic.menu import menu
 from logic.utils_os import detect_os
@@ -13,11 +14,12 @@ async def main():
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[logging.StreamHandler()]
     )
+    cfg_mgr = ConfigManager("config.json")
     cfg = Config(detect_os())
     logging.info(f"Detected OS: {cfg.os_type}")
-    manager = WorldManager(cfg)
+    manager = WorldManager(cfg_mgr)
     await manager.load_worlds()
-    await menu(manager, cfg)
+    await menu(manager, cfg_mgr, cfg)
 
 
 if __name__ == "__main__":

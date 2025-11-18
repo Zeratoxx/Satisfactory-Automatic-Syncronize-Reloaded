@@ -1,24 +1,25 @@
-import asyncio
 import logging
 import os
 
 from git import Repo
 
 from logic.Config import Config
-from logic.utils_stdin import prompt, prompt_with_default
+from logic.ConfigManager import ConfigManager
+from logic.utils_stdin import prompt, prompt_with_default, timed_input
 from logic.WorldManager import WorldManager
 from logic.RunController import RunController
 from logic.GitRepository import GitRepository
 
 
-async def menu(manager: WorldManager, cfg: Config):
+async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
     while True:
         print("\n=== Welt-Manager Menü ===")
         print("1) Neue Welt hinzufügen")
         print("2) Bestehende Welt auswählen und starten")
-        print("3) Welt bearbeiten (Änderungen werden NACH Bestätigung gespeichert)")
+        print("3) Welt bearbeiten")
         print("4) Welt löschen")
-        print("5) Beenden")
+        print("5) Git-Message bearbeiten")
+        print("6) Beenden")
         print("Hinweis: 'z' = Zurück ins Hauptmenü, 'q' = Sofort beenden")
 
         choice = input("Bitte Auswahl eingeben: ").strip().lower()
@@ -54,6 +55,10 @@ async def menu(manager: WorldManager, cfg: Config):
                 print("Keine Welten vorhanden. Bitte zuerst eine Welt hinzufügen.")
                 continue
 
+            last_world = cfg_mgr.get_setting("last_world")
+            if last_world:
+                print(f"Letzte Auswahl war: {last_world}")
+
             print("\nVerfügbare Welten:")
             for idx, w in enumerate(worlds, start=1):
                 print(f"{idx}) {w.name} | Pfad: {w.path} | Saves: {w.save_count} | Größe: {w.size_mb} MB")
@@ -72,29 +77,68 @@ async def menu(manager: WorldManager, cfg: Config):
                 print("Ungültige Auswahl.")
                 continue
 
+            cfg_mgr.set_setting("last_world", chosen_world.name)
+
+            # Experimental-Flag
+            last_exp = cfg_mgr.get_setting("last_experimental", False)
+            print(f"Letzte Einstellung: {'Experimental' if last_exp else 'Normal'}")
+            exp_raw = input("Experimental-Version starten? (j/n, Enter=letzte Einstellung): ").strip().lower()
+            if exp_raw == "j":
+                use_experimental = True
+            elif exp_raw == "n":
+                use_experimental = False
+            else:
+                use_experimental = last_exp
+            cfg_mgr.set_setting("last_experimental", use_experimental)
+
             logging.info(f"Chosen world: {chosen_world}")
 
-            git_repo = GitRepository(await asyncio.to_thread(Repo, chosen_world.path))
 
-            # Git Pull (falls Repo)
-            await git_repo.git_pull()
 
+
+
+            # TODO REMOVE DEBUG
+            last_msg = cfg_mgr.get_setting("last_git_message", "Spielupdate (Standard)")
+            print(f"Letzte Git-Message: {last_msg}")
+
+            git_msg = timed_input("Neue Git-Message:", timeout=7, default=last_msg)
+            # Basistext in config.json speichern
+            cfg_mgr.set_setting("last_git_message", git_msg)
+            # Conventional Commit mit Datum/User/Host bauen
+            final_msg = GitRepository.build_conventional_commit(git_msg)
+            print(final_msg)
+            # TODO REMOVE DEBUG
+
+
+
+
+
+            runner = RunController(cfg)
             # Spiel starten
-            use_experimental = False
-            run_controller = RunController(cfg)
-            await run_controller.start_game(use_experimental)
+            await runner.start_game(use_experimental, chosen_world)
 
             # Warten bis Spiel beendet
-            await run_controller.wait_for_game_closed()
+            await runner.wait_for_game_closed()
 
             # Savegames synchronisieren und Metadaten aktualisieren
             destination = os.path.join(cfg.base_path, cfg.which_saved)
             await chosen_world.copy_saves_to(destination)
             await manager.update_world_metadata(chosen_world)
 
-            # Git Commit & Push (falls Repo)
-            await git_repo.git_commit_and_push(f"Spielupdate {cfg.username} ({chosen_world.last_played})")
+            last_msg = cfg_mgr.get_setting("last_git_message", "Spielupdate (Standard)")
+            print(f"Letzte Git-Message: {last_msg}")
 
+            git_msg = timed_input("Neue Git-Message:", timeout=5, default=last_msg)
+            # Basistext in config.json speichern
+            cfg_mgr.set_setting("last_git_message", git_msg)
+
+            # Conventional Commit mit Datum/User/Host bauen
+            final_msg = build_conventional_commit(git_msg, commit_type="update")
+
+            # Nur Basistext speichern
+            cfg_mgr.set_setting("last_git_message", git_msg)
+
+            await git_commit_and_push(chosen_world.path, final_msg)
             logging.info("Welt-Synchronisation abgeschlossen.")
 
         # --- Welt bearbeiten ---
@@ -173,9 +217,7 @@ async def menu(manager: WorldManager, cfg: Config):
                 print("Ungültige Auswahl.")
                 continue
 
-            confirm = (input(
-                f"Soll die Welt '{chosen_world.name}' wirklich gelöscht werden? (j/n, 'z'=Zurück, 'q'=Beenden): ")
-                       .strip().lower())
+            confirm = input(f"Soll die Welt '{chosen_world.name}' wirklich gelöscht werden? (j/n, 'z'=Zurück, 'q'=Beenden): ").strip().lower()
             if confirm == "q":
                 print("Beende Programm...")
                 break
@@ -188,9 +230,30 @@ async def menu(manager: WorldManager, cfg: Config):
             print(f"Welt '{chosen_world.name}' wurde gelöscht.")
 
         # --- Beenden ---
-        elif choice == "5":
+        elif choice == "6":
             print("Beende Programm...")
             break
+
+        # --- Git-Message bearbeiten ---
+        elif choice == "5":
+            last_msg = cfg_mgr.get_setting("last_git_message")
+            if last_msg:
+                print(f"Aktuelle Git-Message: {last_msg}")
+            else:
+                print("Noch keine Git-Message gespeichert.")
+
+            new_msg = input("Neue Git-Message eingeben ('z'=Zurück, 'q'=Beenden, Enter=behalten): ").strip()
+            if new_msg.lower() == "q":
+                print("Beende Programm...")
+                break
+            if new_msg.lower() == "z":
+                continue
+            if not new_msg:
+                print("Git-Message unverändert.")
+                continue
+
+            cfg_mgr.set_setting("last_git_message", new_msg)
+            print(f"Neue Git-Message gespeichert: {new_msg}")
 
         else:
             print("Ungültige Eingabe, bitte erneut versuchen.")
