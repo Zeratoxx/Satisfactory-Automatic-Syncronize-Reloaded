@@ -4,7 +4,6 @@ import sys
 import time
 
 
-
 def prompt(text: str, allow_quit: bool = True) -> str:
     """Einfache Prompt-Funktion. 'q' beendet das Programm sofort, wenn allow_quit=True."""
     val = input(text).strip()

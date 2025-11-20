@@ -1,7 +1,6 @@
 import os
 import asyncio
 import logging
-
 import psutil
 
 from logic.Config import Config
