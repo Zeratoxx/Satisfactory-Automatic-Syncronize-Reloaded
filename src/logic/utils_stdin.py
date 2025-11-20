@@ -22,8 +22,8 @@ def prompt_with_default(label: str, current: str, allow_quit: bool = True) -> st
     return val if val else current
 
 
-def timed_input(prompt: str, timeout: int, default: str) -> str:
-    print(f"{prompt} (Timeout={timeout}s, Enter=letzte/Standard verwenden)")
+def timed_input(text: str, timeout: int, default: str) -> str:
+    print(f"{text} (Timeout={timeout}s, Enter=letzte/Standard verwenden)")
     print(f"Automatisch genutzt falls keine Eingabe: {default}")
 
     q = queue.Queue()
