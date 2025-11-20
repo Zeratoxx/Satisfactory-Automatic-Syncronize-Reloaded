@@ -5,13 +5,13 @@ import logging
 import psutil
 
 from logic.Config import Config
-from logic.OSType import OSType
+from logic.OS import OS
 from logic.World import World
 
 
 class RunController:
     def __init__(self, cfg: Config):
-        self.os_type: OSType = cfg.os_type
+        self.os_type: OS.OSType = cfg.os_type
         self.executable_name = cfg.executable_name
         self.savegame_path: str = cfg.base_path
         self.backup_savegame_path: str = cfg.base_path + "-bak"
@@ -29,13 +29,13 @@ class RunController:
 
     async def start_game(self, world: World, use_experimental: bool):
         self._load_world(world)
-        if self.os_type == OSType.WINDOWS:
+        if self.os_type == OS.OSType.WINDOWS:
             app = "CrabTest" if use_experimental else "CrabEA"
             logging.info(f"Starting game via Epic Launcher: {app}")
             await asyncio.to_thread(os.system, f"start com.epicgames.launcher://apps/{app}?action=launch")
-        elif self.os_type == OSType.LINUX:
+        elif self.os_type == OS.OSType.LINUX:
             logging.info("Linux detected. Please start the game manually (Epic Launcher via Wine/Proton).")
-        elif self.os_type == OSType.MAC:
+        elif self.os_type == OS.OSType.MAC:
             logging.info("macOS detected. Please start the game manually (Epic Launcher for Mac).")
         else:
             logging.error("Unsupported OS type.")

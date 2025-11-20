@@ -5,7 +5,7 @@ from logic.Config import Config
 from logic.ConfigManager import ConfigManager
 from logic.WorldManager import WorldManager
 from logic.menu import menu
-from logic.utils_os import detect_os
+from logic.OS import OS
 
 
 async def main():
@@ -15,7 +15,7 @@ async def main():
         handlers=[logging.StreamHandler()]
     )
     cfg_mgr = ConfigManager("config.json")
-    cfg = Config(detect_os())
+    cfg = Config(OS().detect_os())
     logging.info(f"Detected OS: {cfg.os_type}")
     manager = WorldManager(cfg_mgr)
     await manager.load_worlds()

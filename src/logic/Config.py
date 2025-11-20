@@ -1,21 +1,21 @@
 import os
 
-from logic.OSType import OSType
+from logic.OS import OS
 
 
 class Config:
-    def __init__(self, os_type: OSType):
+    def __init__(self, os_type: OS.OSType):
         self.check_interval = 2
         self.username = os.getenv("USERNAME") or os.getenv("USER")
 
         self.os_type = os_type
-        if self.os_type == OSType.WINDOWS:
+        if self.os_type == OS.OSType.WINDOWS:
             self.base_path = os.path.join(os.path.expanduser("~"), "AppData", "Local", "FactoryGame", "Saved")
             self.executable_name = "FactoryGameEGS.exe"
-        elif self.os_type == OSType.LINUX:
+        elif self.os_type == OS.OSType.LINUX:
             self.base_path = os.path.join(os.path.expanduser("~"), ".local", "share", "FactoryGame", "Saved")
             self.executable_name = "FactoryGame"
-        elif self.os_type == OSType.MAC:
+        elif self.os_type == OS.OSType.MAC:
             self.base_path = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "FactoryGame",
                                           "Saved")
             self.executable_name = "FactoryGame"
