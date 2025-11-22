@@ -9,22 +9,39 @@ from logic.World import World
 
 
 class RunController:
-    def __init__(self, cfg: Config):
-        self.os_type: OS.OSType = cfg.os_type
-        self.executable_name = cfg.executable_name
-        self.savegame_path: str = cfg.base_path
-        self.backup_savegame_path: str = cfg.base_path + "-bak"
-        self.check_interval: int = cfg.check_interval
+    def __init__(self, cfg: Config, check_interval: int = 2):
+        self.os_type: OS.OSType = OS().detect_os()
+        if self.os_type == OS.OSType.WINDOWS:
+            base_path: str = os.path.join(os.path.expanduser("~"), "AppData", "Local", "FactoryGame", "Saved")
+            self.executable_name: str = "FactoryGameEGS.exe"
+        elif self.os_type == OS.OSType.LINUX:
+            base_path: str = os.path.join(os.path.expanduser("~"), ".local", "share", "FactoryGame", "Saved")
+            self.executable_name: str = "FactoryGame"
+        elif self.os_type == OS.OSType.MAC:
+            base_path: str = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "FactoryGame",
+                                          "Saved")
+            self.executable_name: str = "FactoryGame"
+        else:
+            base_path: str = os.path.join(os.path.expanduser("~"), "FactoryGame", "Saved")
+            self.executable_name: str = "FactoryGame"
+        self.game_data_path: str = base_path
+        self.savegames_path: str = os.path.join(base_path, "SaveGames")
+        self.common_savegames_path: str = os.path.join(self.savegames_path, "common")
+        self.backup_savegame_path: str = self.savegames_path + "-bak"
+        self.logs_path: str = os.path.join(base_path, "logs")
+
+        self.username: str = os.getenv("USERNAME") or os.getenv("USER")
+        self.check_interval: int = check_interval
 
     def _backup_current_savegame_path(self):
         logging.info("Backing up current savegame path.")
-        os.copy_file_range(self.savegame_path, self.backup_savegame_path)
+        os.copy_file_range(self.savegames_path, self.backup_savegame_path)
         logging.info("Backup done.")
 
     def _load_world(self, world: World):
         self._backup_current_savegame_path()
-        os.remove(self.savegame_path)
-        os.copy_file_range(world.sanitized_folder_path, self.savegame_path)
+        os.remove(self.savegames_path)
+        os.copy_file_range(world.sanitized_folder_path, self.common_savegames_path)
 
     async def start_game(self, world: World, use_experimental: bool):
         self._load_world(world)
