@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 import os
 import shutil
@@ -52,15 +53,14 @@ class World:
         logging.info(f"Copied {self.save_count} saves ({self.size_mb} MB) from world '{self.name}' to {destination}")
 
     def to_dict(self) -> dict:
-        return {
-            "name": self.name,
-            "path": self.path,
-            "created_at": self.created_at,
-            "last_played": self.last_played,
-            "save_count": self.save_count,
-            "size_mb": self.size_mb,
-            "description": self.description
-        }
+        return json.loads(self.toJSON())
+
+    def toJSON(self) -> str:
+        return json.dumps(
+            self,
+            default=lambda o: o.__dict__,
+            sort_keys=True,
+            indent=2)
 
     @staticmethod
     def from_dict(data: dict, base_path: str = None):
