@@ -3,7 +3,7 @@ import logging
 import os
 
 
-class ConfigManager:
+class ConfigController:
     def __init__(self, filename: str):
         self.filename = os.path.join(os.path.dirname(__file__), filename)
         self.data = {}

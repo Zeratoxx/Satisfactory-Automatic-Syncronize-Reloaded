@@ -1,11 +1,11 @@
 import logging
 import asyncio
 
-from logic.Config import Config
-from logic.ConfigManager import ConfigManager
-from logic.WorldManager import WorldManager
-from logic.menu import menu
-from logic.OS import OS
+from logic.models.Config import Config
+from logic.controller.ConfigController import ConfigController
+from logic.manager.WorldManager import WorldManager
+from logic.utils.menu import menu
+from logic.models.OS import OS
 
 
 async def main():
@@ -14,7 +14,7 @@ async def main():
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[logging.StreamHandler()]
     )
-    cfg_mgr = ConfigManager("config.json")
+    cfg_mgr = ConfigController("config.json")
     cfg = Config(OS().detect_os())
     logging.info(f"Detected OS: {cfg.os_type}")
     manager = WorldManager(cfg_mgr)

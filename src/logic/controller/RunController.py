@@ -3,9 +3,9 @@ import asyncio
 import logging
 import psutil
 
-from logic.Config import Config
-from logic.OS import OS
-from logic.World import World
+from logic.models.Config import Config
+from logic.models.OS import OS
+from logic.models.World import World
 
 
 class RunController:

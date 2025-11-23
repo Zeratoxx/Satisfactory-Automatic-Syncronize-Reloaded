@@ -1,11 +1,11 @@
 import logging
 
-from logic.ConfigManager import ConfigManager
-from logic.World import World
+from logic.controller.ConfigController import ConfigController
+from logic.models.World import World
 
 
-class WorldManager:
-    def __init__(self, cfg_mgr: ConfigManager):
+class WorldsManager:
+    def __init__(self, cfg_mgr: ConfigController):
         self.cfg_mgr = cfg_mgr
         self.worlds: list[World] = []
 

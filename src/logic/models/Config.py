@@ -1,6 +1,6 @@
 import json
 
-from logic import World
+from .World import World
 
 
 class Config:

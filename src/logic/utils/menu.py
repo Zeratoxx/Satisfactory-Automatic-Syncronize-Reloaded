@@ -1,17 +1,15 @@
 import logging
 import os
 
-from git import Repo
-
-from logic.Config import Config
-from logic.ConfigManager import ConfigManager
-from logic.utils_stdin import prompt, prompt_with_default, timed_input
-from logic.WorldManager import WorldManager
-from logic.RunController import RunController
-from logic.GitRepository import GitRepository
+from logic.models.Config import Config
+from logic.controller.ConfigController import ConfigController
+from logic.utils.utils_stdin import prompt, prompt_with_default, timed_input
+from logic.manager.WorldsManager import WorldsManager
+from logic.controller.RunController import RunController
+from logic.models.GitRepository import GitRepository
 
 
-async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
+async def menu(worlds_manager: WorldsManager, config_controller: ConfigController, cfg: Config):
     while True:
         print("\n=== Welt-Manager Menü ===")
         print("1) Neue Welt hinzufügen")
@@ -43,19 +41,19 @@ async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
                         print("Welt wurde nicht hinzugefügt (Pfad existiert nicht).")
                         continue
 
-                await manager.add_world(name, path, description=desc)
+                await worlds_manager.add_world(name, path, description=desc)
                 print(f"Welt '{name}' wurde hinzugefügt.")
             except SystemExit:
                 break
 
         # --- Welt auswählen und starten ---
         elif choice == "2":
-            worlds = manager.list_worlds()
+            worlds = worlds_manager.list_worlds()
             if not worlds:
                 print("Keine Welten vorhanden. Bitte zuerst eine Welt hinzufügen.")
                 continue
 
-            last_world = cfg_mgr.get_setting("last_world")
+            last_world = config_controller.get_setting("last_world")
             if last_world:
                 print(f"Letzte Auswahl war: {last_world}")
 
@@ -77,10 +75,10 @@ async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
                 print("Ungültige Auswahl.")
                 continue
 
-            cfg_mgr.set_setting("last_world", chosen_world.name)
+            config_controller.set_setting("last_world", chosen_world.name)
 
             # Experimental-Flag
-            last_exp = cfg_mgr.get_setting("last_experimental", False)
+            last_exp = config_controller.get_setting("last_experimental", False)
             print(f"Letzte Einstellung: {'Experimental' if last_exp else 'Normal'}")
             exp_raw = input("Experimental-Version starten? (j/n, Enter=letzte Einstellung): ").strip().lower()
             if exp_raw == "j":
@@ -89,29 +87,21 @@ async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
                 use_experimental = False
             else:
                 use_experimental = last_exp
-            cfg_mgr.set_setting("last_experimental", use_experimental)
+            config_controller.set_setting("last_experimental", use_experimental)
 
             logging.info(f"Chosen world: {chosen_world}")
 
-
-
-
-
             # TODO REMOVE DEBUG
-            last_msg = cfg_mgr.get_setting("last_git_message", "Spielupdate (Standard)")
+            last_msg = config_controller.get_setting("last_git_message", "Spielupdate (Standard)")
             print(f"Letzte Git-Message: {last_msg}")
 
             git_msg = timed_input("Neue Git-Message:", timeout=7, default=last_msg)
             # Basistext in config.json speichern
-            cfg_mgr.set_setting("last_git_message", git_msg)
+            config_controller.set_setting("last_git_message", git_msg)
             # Conventional Commit mit Datum/User/Host bauen
             final_msg = GitRepository.build_conventional_commit(git_msg)
             print(final_msg)
             # TODO REMOVE DEBUG
-
-
-
-
 
             runner = RunController(cfg)
             # Spiel starten
@@ -123,27 +113,27 @@ async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
             # Savegames synchronisieren und Metadaten aktualisieren
             destination = os.path.join(cfg.base_path, cfg.which_saved)
             await chosen_world.copy_saves_to(destination)
-            await manager.update_world_metadata(chosen_world)
+            await worlds_manager.update_world_metadata(chosen_world)
 
-            last_msg = cfg_mgr.get_setting("last_git_message", "Spielupdate (Standard)")
+            last_msg = config_controller.get_setting("last_git_message", "Spielupdate (Standard)")
             print(f"Letzte Git-Message: {last_msg}")
 
             git_msg = timed_input("Neue Git-Message:", timeout=5, default=last_msg)
             # Basistext in config.json speichern
-            cfg_mgr.set_setting("last_git_message", git_msg)
+            config_controller.set_setting("last_git_message", git_msg)
 
             # Conventional Commit mit Datum/User/Host bauen
             final_msg = build_conventional_commit(git_msg, commit_type="update")
 
             # Nur Basistext speichern
-            cfg_mgr.set_setting("last_git_message", git_msg)
+            config_controller.set_setting("last_git_message", git_msg)
 
             await git_commit_and_push(chosen_world.path, final_msg)
             logging.info("Welt-Synchronisation abgeschlossen.")
 
         # --- Welt bearbeiten ---
         elif choice == "3":
-            worlds = manager.list_worlds()
+            worlds = worlds_manager.list_worlds()
             if not worlds:
                 print("Keine Welten vorhanden.")
                 continue
@@ -189,12 +179,12 @@ async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
             chosen_world.name = new_name
             chosen_world.path = new_path
             chosen_world.description = new_desc
-            await manager.save_worlds()
+            await worlds_manager.save_worlds()
             print("Änderungen gespeichert.")
 
         # --- Welt löschen ---
         elif choice == "4":
-            worlds = manager.list_worlds()
+            worlds = worlds_manager.list_worlds()
             if not worlds:
                 print("Keine Welten vorhanden.")
                 continue
@@ -217,7 +207,9 @@ async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
                 print("Ungültige Auswahl.")
                 continue
 
-            confirm = input(f"Soll die Welt '{chosen_world.name}' wirklich gelöscht werden? (j/n, 'z'=Zurück, 'q'=Beenden): ").strip().lower()
+            confirm = (input(
+                f"Soll die Welt '{chosen_world.name}' wirklich gelöscht werden? (j/n, 'z'=Zurück, 'q'=Beenden): ")
+                       .strip().lower())
             if confirm == "q":
                 print("Beende Programm...")
                 break
@@ -225,8 +217,8 @@ async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
                 print("Löschen abgebrochen.")
                 continue
 
-            manager.worlds.remove(chosen_world)
-            await manager.save_worlds()
+            worlds_manager.worlds.remove(chosen_world)
+            await worlds_manager.save_worlds()
             print(f"Welt '{chosen_world.name}' wurde gelöscht.")
 
         # --- Beenden ---
@@ -236,7 +228,7 @@ async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
 
         # --- Git-Message bearbeiten ---
         elif choice == "5":
-            last_msg = cfg_mgr.get_setting("last_git_message")
+            last_msg = config_controller.get_setting("last_git_message")
             if last_msg:
                 print(f"Aktuelle Git-Message: {last_msg}")
             else:
@@ -252,7 +244,7 @@ async def menu(manager: WorldManager, cfg_mgr: ConfigManager, cfg: Config):
                 print("Git-Message unverändert.")
                 continue
 
-            cfg_mgr.set_setting("last_git_message", new_msg)
+            config_controller.set_setting("last_git_message", new_msg)
             print(f"Neue Git-Message gespeichert: {new_msg}")
 
         else:
