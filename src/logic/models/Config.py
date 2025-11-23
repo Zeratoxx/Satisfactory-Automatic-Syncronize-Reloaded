@@ -19,3 +19,9 @@ class Config:
             default=lambda o: o.__dict__,
             sort_keys=True,
             indent=2)
+
+    def get(self, key):
+        return self.__dict__.get(key, None)
+
+    def set(self, key, value):
+        self.__dict__[key] = value

@@ -1,7 +1,7 @@
-from logic.models.OS import OS
-from logic.controller.RunController import RunController
-from logic.models.GitRepository import GitRepository
-from logic.models.Config import Config
-from logic.controller.ConfigController import ConfigController
-from logic.models.World import World
-from logic.manager.WorldManager import WorldManager
+import logic.models.OS
+import logic.models.GitRepository
+import logic.models.Config
+import logic.models.World
+import logic.manager.WorldsManager
+import logic.controller.RunController
+import logic.controller.ConfigController
