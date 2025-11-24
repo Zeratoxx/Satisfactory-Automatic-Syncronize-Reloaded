@@ -2,7 +2,7 @@ import logging
 import asyncio
 
 from logic.models import Config, OS
-from logic.controller import ConfigController
+from logic.controller import ConfigController, RunController
 from logic.manager import WorldsManager
 from logic.utils import menu
 
@@ -13,9 +13,9 @@ async def main():
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[logging.StreamHandler()]
     )
-    cfg_mgr = ConfigController("config.json")
-    cfg = Config(OS().detect_os())
-    logging.info(f"Detected OS: {cfg.os_type}")
+    config_controller = ConfigController()
+    run_controller = RunController()
+    logging.info(f"Detected OS: {run_controller.os_type}")
     manager = WorldsManager(cfg_mgr)
     await manager.load_worlds()
     await menu(manager, cfg_mgr, cfg)
