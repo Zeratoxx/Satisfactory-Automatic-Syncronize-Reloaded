@@ -1,7 +1,7 @@
 import logging
 
-from logic.controller.ConfigController import ConfigController
-from logic.models.World import World
+from logic.controller import ConfigController
+from logic.models import World
 
 
 class WorldsManager:

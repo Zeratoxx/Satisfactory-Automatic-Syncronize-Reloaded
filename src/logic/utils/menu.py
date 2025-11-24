@@ -1,12 +1,10 @@
 import logging
 import os
 
-from logic.models.Config import Config
-from logic.controller.ConfigController import ConfigController
-from logic.utils.utils_stdin import prompt, prompt_with_default, timed_input
-from logic.manager.WorldsManager import WorldsManager
-from logic.controller.RunController import RunController
-from logic.models.GitRepository import GitRepository
+from logic.models import Config, GitRepository
+from logic.controller import ConfigController, RunController
+from logic.manager import WorldsManager
+from logic.utils import prompt, prompt_with_default, timed_input
 
 
 async def menu(worlds_manager: WorldsManager, config_controller: ConfigController, cfg: Config):

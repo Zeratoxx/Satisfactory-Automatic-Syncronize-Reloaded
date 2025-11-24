@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from logic.models.Config import Config
+from logic.models import Config
 
 
 class ConfigController:
