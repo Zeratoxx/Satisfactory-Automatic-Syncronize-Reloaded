@@ -1,13 +1,12 @@
 import logging
 import os
 
-from logic.models import Config, GitRepository
+from logic.models import GitRepository
 from logic.controller import ConfigController, RunController
-from logic.manager import WorldsManager
 from logic.utils import prompt, prompt_with_default, timed_input
 
 
-async def menu(worlds_manager: WorldsManager, config_controller: ConfigController, cfg: Config):
+async def menu(config_controller: ConfigController, run_controller: RunController):
     while True:
         print("\n=== Welt-Manager Menü ===")
         print("1) Neue Welt hinzufügen")
@@ -39,14 +38,14 @@ async def menu(worlds_manager: WorldsManager, config_controller: ConfigControlle
                         print("Welt wurde nicht hinzugefügt (Pfad existiert nicht).")
                         continue
 
-                await worlds_manager.add_world(name, path, description=desc)
+                config_controller.add_world(name, path, description=desc)
                 print(f"Welt '{name}' wurde hinzugefügt.")
             except SystemExit:
                 break
 
         # --- Welt auswählen und starten ---
         elif choice == "2":
-            worlds = worlds_manager.list_worlds()
+            worlds = config_controller.get_worlds()
             if not worlds:
                 print("Keine Welten vorhanden. Bitte zuerst eine Welt hinzufügen.")
                 continue
@@ -101,17 +100,16 @@ async def menu(worlds_manager: WorldsManager, config_controller: ConfigControlle
             print(final_msg)
             # TODO REMOVE DEBUG
 
-            runner = RunController(cfg)
             # Spiel starten
-            await runner.start_game(use_experimental, chosen_world)
+            await run_controller.start_game(use_experimental, chosen_world)
 
             # Warten bis Spiel beendet
-            await runner.wait_for_game_closed()
+            await run_controller.wait_for_game_closed()
 
             # Savegames synchronisieren und Metadaten aktualisieren
-            destination = os.path.join(cfg.base_path, cfg.which_saved)
+            destination = os.path.join(run_controller.game_data_path, run_controller.which_saved)
             await chosen_world.copy_saves_to(destination)
-            await worlds_manager.update_world_metadata(chosen_world)
+            config_controller.fetch_world_metadata(chosen_world)
 
             last_msg = config_controller.get_setting("last_git_message", "Spielupdate (Standard)")
             print(f"Letzte Git-Message: {last_msg}")
@@ -131,7 +129,7 @@ async def menu(worlds_manager: WorldsManager, config_controller: ConfigControlle
 
         # --- Welt bearbeiten ---
         elif choice == "3":
-            worlds = worlds_manager.list_worlds()
+            worlds = config_controller.get_worlds()
             if not worlds:
                 print("Keine Welten vorhanden.")
                 continue
@@ -177,12 +175,12 @@ async def menu(worlds_manager: WorldsManager, config_controller: ConfigControlle
             chosen_world.name = new_name
             chosen_world.path = new_path
             chosen_world.description = new_desc
-            await worlds_manager.save_worlds()
+            config_controller.patch_worlds_list([chosen_world])
             print("Änderungen gespeichert.")
 
         # --- Welt löschen ---
         elif choice == "4":
-            worlds = worlds_manager.list_worlds()
+            worlds = config_controller.get_worlds()
             if not worlds:
                 print("Keine Welten vorhanden.")
                 continue
@@ -215,8 +213,7 @@ async def menu(worlds_manager: WorldsManager, config_controller: ConfigControlle
                 print("Löschen abgebrochen.")
                 continue
 
-            worlds_manager.worlds.remove(chosen_world)
-            await worlds_manager.save_worlds()
+            config_controller.remove_world(chosen_world)
             print(f"Welt '{chosen_world.name}' wurde gelöscht.")
 
         # --- Beenden ---

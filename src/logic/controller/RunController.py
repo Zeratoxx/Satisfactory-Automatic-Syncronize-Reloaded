@@ -3,11 +3,11 @@ import asyncio
 import logging
 import psutil
 
-from logic.models import Config, OS, World, GitRepository
+from logic.models import OS, World, GitRepository
 
 
 class RunController:
-    def __init__(self, cfg: Config, check_interval: int = 2):
+    def __init__(self, check_interval: int = 2):
         self.os_type: OS.OSType = OS().detect_os()
         if self.os_type == OS.OSType.WINDOWS:
             base_path: str = os.path.join(os.path.expanduser("~"), "AppData", "Local", "FactoryGame", "Saved")
@@ -39,7 +39,7 @@ class RunController:
     def _load_world(self, world: World):
         self._backup_current_savegame_path()
         os.remove(self.savegames_path)
-        os.copy_file_range(world.sanitized_folder_path, self.common_savegames_path)
+        os.copy_file_range(world.path, self.common_savegames_path)
 
     async def start_game(self, world: World, use_experimental: bool):
         self._load_world(world)
@@ -71,3 +71,6 @@ class RunController:
                 else:
                     logging.info("Game not yet started...")
                     await asyncio.sleep(self.check_interval)
+
+    def _save_world(self, world: World):
+        os.copy_file_range(self.savegames_path, world.path)
