@@ -8,11 +8,11 @@ from logic.models import Config, World
 class ConfigController:
     def __init__(self, filename: str = "config.json", file_encoding: str = "utf-8"):
         self.file_encoding = file_encoding
-        self.filename: str = os.path.join(os.path.dirname(__file__), filename)
+        self.filename: str = os.path.join(os.getcwd(), filename)
         self.config: Config | None = None
         self.deserialize_config()
 
-    async def deserialize_config(self):
+    def deserialize_config(self):
         if os.path.exists(self.filename):
             try:
                 with open(self.filename, "r", encoding=self.file_encoding) as f:
@@ -23,13 +23,13 @@ class ConfigController:
         else:
             logging.info(f"Create configuration with default values...")
             self.config = Config()
-            await self.serialize_config()
+            self.serialize_config()
             logging.info(f"Configuration with default values created and serialized.")
 
-    async def serialize_config(self):
+    def serialize_config(self):
         try:
             with open(self.filename, "w", encoding=self.file_encoding) as f:
-                json.dump(self.config, f, indent=2)
+                json.dump(self.config.toJSON(), f, indent=2)
                 logging.info(f"Worlds saved to {self.filename}.")
         except Exception as e:
             logging.error(f"Error at serializing the config: {e}")

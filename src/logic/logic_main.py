@@ -14,7 +14,7 @@ async def main():
     config_controller = ConfigController()
     run_controller = RunController()
     logging.info(f"Detected OS: {run_controller.os_type}")
-    await menu(config_controller, run_controller)
+    menu(config_controller, run_controller)
 
 
 if __name__ == "__main__":

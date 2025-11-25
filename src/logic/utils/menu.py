@@ -3,10 +3,10 @@ import os
 
 from logic.models import GitRepository
 from logic.controller import ConfigController, RunController
-from logic.utils import prompt, prompt_with_default, timed_input
+from .utils_stdin import prompt, timed_input, prompt_with_default
 
 
-async def menu(config_controller: ConfigController, run_controller: RunController):
+def menu(config_controller: ConfigController, run_controller: RunController):
     while True:
         print("\n=== Welt-Manager Menü ===")
         print("1) Neue Welt hinzufügen")
@@ -101,14 +101,14 @@ async def menu(config_controller: ConfigController, run_controller: RunControlle
             # TODO REMOVE DEBUG
 
             # Spiel starten
-            await run_controller.start_game(use_experimental, chosen_world)
+            run_controller.start_game(use_experimental, chosen_world)
 
             # Warten bis Spiel beendet
-            await run_controller.wait_for_game_closed()
+            run_controller.wait_for_game_closed()
 
             # Savegames synchronisieren und Metadaten aktualisieren
             destination = os.path.join(run_controller.game_data_path, run_controller.which_saved)
-            await chosen_world.copy_saves_to(destination)
+            chosen_world.copy_saves_to(destination)
             config_controller.fetch_world_metadata(chosen_world)
 
             last_msg = config_controller.get_setting("last_git_message", "Spielupdate (Standard)")
@@ -124,7 +124,7 @@ async def menu(config_controller: ConfigController, run_controller: RunControlle
             # Nur Basistext speichern
             config_controller.set_setting("last_git_message", git_msg)
 
-            await git_commit_and_push(chosen_world.path, final_msg)
+            git_commit_and_push(chosen_world.path, final_msg)
             logging.info("Welt-Synchronisation abgeschlossen.")
 
         # --- Welt bearbeiten ---
