@@ -1,7 +1,6 @@
 import logging
 import asyncio
 
-from logic.models import Config, OS
 from logic.controller import ConfigController, RunController
 from logic.manager import WorldsManager
 from logic.utils import menu
