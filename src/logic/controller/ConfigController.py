@@ -16,7 +16,7 @@ class ConfigController:
         if os.path.exists(self.filename):
             try:
                 with open(self.filename, "r", encoding=self.file_encoding) as f:
-                    self.config = Config(json.load(f))
+                    self.config = Config(f)
             except Exception as e:
                 logging.error(f"Error at fetching the config file: {e}")
                 self.config = None
@@ -29,7 +29,11 @@ class ConfigController:
     def serialize_config(self):
         try:
             with open(self.filename, "w", encoding=self.file_encoding) as f:
-                json.dump(self.config.toJSON(), f, indent=2)
+                json.dump(self.config,
+                          f,
+                          default=lambda o: o.__dict__,
+                          sort_keys=True,
+                          indent=2)
                 logging.info(f"Worlds saved to {self.filename}.")
         except Exception as e:
             logging.error(f"Error at serializing the config: {e}")
