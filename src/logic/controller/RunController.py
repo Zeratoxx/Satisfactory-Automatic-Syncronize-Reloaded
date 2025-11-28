@@ -1,6 +1,8 @@
 import os
 import asyncio
 import logging
+import shutil
+
 import psutil
 
 from logic.models import OS, World, GitRepository
@@ -30,16 +32,26 @@ class RunController:
 
         self.username: str = os.getenv("USERNAME") or os.getenv("USER")
         self.check_interval: int = check_interval
+        self.glob_anti_sav_files = "!([.]sav)"
 
     def _backup_current_savegame_path(self):
         logging.info("Backing up current savegame path.")
-        os.copy_file_range(self.savegames_path, self.backup_savegame_path)
+        shutil.copytree(self.savegames_path, self.backup_savegame_path,
+                        ignore=shutil.ignore_patterns(self.glob_anti_sav_files), dirs_exist_ok=True)
         logging.info("Backup done.")
 
-    def _load_world(self, world: World):
+    def _clean_up_savegames_folder(self):
         self._backup_current_savegame_path()
-        os.remove(self.savegames_path)
-        os.copy_file_range(world.path, self.common_savegames_path)
+        shutil.rmtree(self.common_savegames_path)
+        for file in os.listdir(self.savegames_path):
+            if file.endswith(".sav"):
+                os.remove(file)
+
+    def _load_world(self, world: World):
+        self._clean_up_savegames_folder()
+        world.update()
+        shutil.copytree(world.path, self.common_savegames_path, ignore=shutil.ignore_patterns(self.glob_anti_sav_files),
+                        dirs_exist_ok=True)
 
     async def start_game(self, world: World, use_experimental: bool):
         self._load_world(world)
@@ -72,5 +84,7 @@ class RunController:
                     logging.info("Game not yet started...")
                     await asyncio.sleep(self.check_interval)
 
-    def _save_world(self, world: World):
-        os.copy_file_range(self.savegames_path, world.path)
+    def save_world(self, world: World, git_message: str):
+        shutil.copytree(self.savegames_path, world.path, ignore=shutil.ignore_patterns(self.glob_anti_sav_files),
+                        dirs_exist_ok=True)
+        world.upload(git_message)

@@ -88,28 +88,11 @@ def menu(config_controller: ConfigController, run_controller: RunController):
 
             logging.info(f"Chosen world: {chosen_world}")
 
-            # TODO REMOVE DEBUG
-            last_msg = config_controller.get_setting("last_git_message", "Spielupdate (Standard)")
-            print(f"Letzte Git-Message: {last_msg}")
 
-            git_msg = timed_input("Neue Git-Message:", timeout=7, default=last_msg)
-            # Basistext in config.json speichern
-            config_controller.set_setting("last_git_message", git_msg)
-            # Conventional Commit mit Datum/User/Host bauen
-            final_msg = GitRepository.build_conventional_commit(git_msg)
-            print(final_msg)
-            # TODO REMOVE DEBUG
 
-            # Spiel starten
+            # Spiel starten und Warten bis Spiel beendet
             run_controller.start_game(use_experimental, chosen_world)
-
-            # Warten bis Spiel beendet
             run_controller.wait_for_game_closed()
-
-            # Savegames synchronisieren und Metadaten aktualisieren
-            destination = os.path.join(run_controller.game_data_path, run_controller.which_saved)
-            chosen_world.copy_saves_to(destination)
-            config_controller.fetch_world_metadata(chosen_world)
 
             last_msg = config_controller.get_setting("last_git_message", "Spielupdate (Standard)")
             print(f"Letzte Git-Message: {last_msg}")
@@ -119,12 +102,13 @@ def menu(config_controller: ConfigController, run_controller: RunController):
             config_controller.set_setting("last_git_message", git_msg)
 
             # Conventional Commit mit Datum/User/Host bauen
-            final_msg = build_conventional_commit(git_msg, commit_type="update")
+            final_msg = GitRepository.build_conventional_commit(git_msg, commit_type="update")
 
             # Nur Basistext speichern
             config_controller.set_setting("last_git_message", git_msg)
 
-            git_commit_and_push(chosen_world.path, final_msg)
+            run_controller.save_world(chosen_world, final_msg)
+            # GitRepository.git_commit_and_push(chosen_world.path, final_msg)
             logging.info("Welt-Synchronisation abgeschlossen.")
 
         # --- Welt bearbeiten ---

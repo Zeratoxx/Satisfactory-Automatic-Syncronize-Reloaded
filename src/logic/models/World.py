@@ -5,6 +5,8 @@ import os
 import shutil
 from datetime import datetime
 
+import git
+
 
 class World:
     def __init__(self, name: str, path: str,
@@ -79,3 +81,13 @@ class World:
 
     def __repr__(self):
         return f"World(name={self.name}, path={self.path}, saves={self.save_count}, size={self.size_mb}MB)"
+
+    def update(self):
+        git_repo = git.Repo(self.path)
+        git_repo.git.pull()
+
+    def upload(self, git_message):
+        git_repo = git.Repo(self.path)
+        git_repo.index.add([self.path])
+        git_repo.index.commit(git_message)
+        git_repo.git.push()
