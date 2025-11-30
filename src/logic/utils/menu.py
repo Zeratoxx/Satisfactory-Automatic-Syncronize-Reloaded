@@ -1,7 +1,8 @@
 import logging
 import os
+from pathlib import Path
 
-from logic.models import GitRepository
+from logic.models import GitRepository, World
 from logic.controller import ConfigController, RunController
 from .utils_stdin import prompt, timed_input, prompt_with_default
 
@@ -28,8 +29,8 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                 name = prompt("Name der neuen Welt: ")
                 desc = prompt("Beschreibung (optional): ")
                 path = prompt("Pfad zum Speicherort der Welt (Ordner mit .sav-Dateien): ")
-
-                if not os.path.exists(path):
+                path = Path(r"{}".format(path).strip('"')).resolve()
+                if not path.exists():
                     create = prompt("Pfad existiert nicht. Ordner anlegen? (j/n): ").lower()
                     if create == "j":
                         os.makedirs(path, exist_ok=True)
@@ -38,7 +39,7 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                         print("Welt wurde nicht hinzugefügt (Pfad existiert nicht).")
                         continue
 
-                config_controller.add_world(name, path, description=desc)
+                config_controller.add_world(name, str(path), description=desc)
                 print(f"Welt '{name}' wurde hinzugefügt.")
             except SystemExit:
                 break
@@ -55,7 +56,8 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                 print(f"Letzte Auswahl war: {last_world}")
 
             print("\nVerfügbare Welten:")
-            for idx, w in enumerate(worlds, start=1):
+            for idx in range(1, len(worlds), 1):
+                w: World = worlds[idx]
                 print(f"{idx}) {w.name} | Pfad: {w.path} | Saves: {w.save_count} | Größe: {w.size_mb} MB")
 
             sel_raw = input("Nummer der Welt auswählen ('z'=Zurück, 'q'=Beenden): ").strip().lower()
@@ -112,12 +114,13 @@ def menu(config_controller: ConfigController, run_controller: RunController):
         # --- Welt bearbeiten ---
         elif choice == "3":
             worlds = config_controller.get_worlds()
-            if not worlds:
+            if not worlds or worlds == []:
                 print("Keine Welten vorhanden.")
                 continue
 
             print("\nVerfügbare Welten:")
-            for idx, w in enumerate(worlds, start=1):
+            for idx in range(1, len(worlds)+1, 1):
+                w: World = worlds[idx-1]
                 print(f"{idx}) {w.name} | Pfad: {w.path}")
 
             sel_raw = input("Nummer der Welt zum Bearbeiten ('z'=Zurück, 'q'=Beenden): ").strip().lower()

@@ -2,27 +2,27 @@ import json
 import logging
 import os
 
-from logic.models import Config, World
+from logic.models import RunConfig, World
 
 
 class ConfigController:
     def __init__(self, filename: str = "config.json", file_encoding: str = "utf-8"):
         self.file_encoding = file_encoding
         self.filename: str = os.path.join(os.getcwd(), filename)
-        self.config: Config | None = None
+        self.config: RunConfig | None = None
         self.deserialize_config()
 
     def deserialize_config(self):
         if os.path.exists(self.filename):
             try:
                 with open(self.filename, "r", encoding=self.file_encoding) as f:
-                    self.config = Config(f)
+                    self.config = RunConfig(f)
             except Exception as e:
                 logging.error(f"Error at fetching the config file: {e}")
                 self.config = None
         else:
             logging.info(f"Create configuration with default values...")
-            self.config = Config()
+            self.config = RunConfig()
             self.serialize_config()
             logging.info(f"Configuration with default values created and serialized.")
 
@@ -71,9 +71,6 @@ class ConfigController:
         world.calculate_metadata()
         self.patch_worlds_list([world])
 
-    def get_worlds(self):
-        return self.config.worlds
-
     def remove_world(self, chosen_world: World):
         for world in self.config.worlds:
             if world.name == chosen_world.name:
@@ -81,3 +78,6 @@ class ConfigController:
                 self.serialize_config()
             else:
                 logging.info(f"World '{world.name}' does not exist, nothing to remove.")
+
+    def get_worlds(self) -> list[World]:
+        return self.config.worlds

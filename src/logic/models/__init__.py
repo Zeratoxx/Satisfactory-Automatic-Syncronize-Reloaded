@@ -1,4 +1,4 @@
 from .GitRepository import GitRepository
-from .Config import Config
+from .RunConfig import RunConfig
 from .World import World
 from .OS import OS

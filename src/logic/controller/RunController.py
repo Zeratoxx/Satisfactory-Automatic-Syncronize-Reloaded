@@ -9,21 +9,28 @@ from logic.models import OS, World, GitRepository
 
 
 class RunController:
-    def __init__(self, check_interval: int = 2):
+    def __init__(self, check_interval: int = 2, debug: bool = False):
+        if not debug:
+            home_folder = os.path.expanduser("~")
+        else:
+            home_folder = os.getcwd()
         self.os_type: OS.OSType = OS().detect_os()
         if self.os_type == OS.OSType.WINDOWS:
-            base_path: str = os.path.join(os.path.expanduser("~"), "AppData", "Local", "FactoryGame", "Saved")
+            base_path: str = os.path.join(home_folder, "AppData", "Local", "FactoryGame", "Saved")
             self.executable_name: str = "FactoryGameEGS.exe"
         elif self.os_type == OS.OSType.LINUX:
-            base_path: str = os.path.join(os.path.expanduser("~"), ".local", "share", "FactoryGame", "Saved")
+            base_path: str = os.path.join(home_folder, ".local", "share", "FactoryGame", "Saved")
             self.executable_name: str = "FactoryGame"
         elif self.os_type == OS.OSType.MAC:
-            base_path: str = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "FactoryGame",
+            base_path: str = os.path.join(home_folder, "Library", "Application Support", "FactoryGame",
                                           "Saved")
             self.executable_name: str = "FactoryGame"
         else:
-            base_path: str = os.path.join(os.path.expanduser("~"), "FactoryGame", "Saved")
+            base_path: str = os.path.join(home_folder, "FactoryGame", "Saved")
             self.executable_name: str = "FactoryGame"
+
+        if debug:
+            os.makedirs(base_path, exist_ok=True)
         self.game_data_path: str = base_path
         self.savegames_path: str = os.path.join(base_path, "SaveGames")
         self.common_savegames_path: str = os.path.join(self.savegames_path, "common")

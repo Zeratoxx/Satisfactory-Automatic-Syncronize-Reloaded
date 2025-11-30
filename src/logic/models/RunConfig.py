@@ -4,7 +4,7 @@ from io import TextIOWrapper
 from .World import World
 
 
-class Config:
+class RunConfig:
     def __init__(self, json_input: TextIOWrapper | None = None):
         if json_input is None:
             self.last_git_message: str = "game update"

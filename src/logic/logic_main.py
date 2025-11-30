@@ -12,7 +12,7 @@ async def main():
         handlers=[logging.StreamHandler()]
     )
     config_controller = ConfigController()
-    run_controller = RunController()
+    run_controller = RunController(debug=True)  # TODO remove debug (work with local save files)
     logging.info(f"Detected OS: {run_controller.os_type}")
     menu(config_controller, run_controller)
 
