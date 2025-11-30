@@ -88,10 +88,8 @@ def menu(config_controller: ConfigController, run_controller: RunController):
 
             logging.info(f"Chosen world: {chosen_world}")
 
-
-
             # Spiel starten und Warten bis Spiel beendet
-            run_controller.start_game(use_experimental, chosen_world)
+            run_controller.load_world_and_start_game(use_experimental, chosen_world)
             run_controller.wait_for_game_closed()
 
             last_msg = config_controller.get_setting("last_git_message", "Spielupdate (Standard)")

@@ -53,7 +53,7 @@ class RunController:
         shutil.copytree(world.path, self.common_savegames_path, ignore=shutil.ignore_patterns(self.glob_anti_sav_files),
                         dirs_exist_ok=True)
 
-    async def start_game(self, world: World, use_experimental: bool):
+    async def load_world_and_start_game(self, world: World, use_experimental: bool):
         self._load_world(world)
         if self.os_type == OS.OSType.WINDOWS:
             app = "CrabTest" if use_experimental else "CrabEA"
