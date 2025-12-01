@@ -82,4 +82,7 @@ class ConfigController:
         for world in self.config.worlds:
             if world.path == self.config.last_savegame_choice_path:
                 return world
-        raise Exception("Nothing matched which is strange.")
+        logging.error("Nothing matched which is strange. Resetting last savegame choice.")
+        self.config.last_savegame_choice_path = ""
+        self.serialize_config()
+        return None

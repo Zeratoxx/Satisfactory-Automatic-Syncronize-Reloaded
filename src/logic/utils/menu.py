@@ -51,32 +51,39 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                 print("Keine Welten vorhanden. Bitte zuerst eine Welt hinzufügen.")
                 continue
 
+            print("\n")
             last_world: World | None = config_controller.get_last_chosen_world()
             if last_world:
                 print(f"Letzte Auswahl war: {last_world.name}")
             else:
-                print(f"Keine letzte Auswahl vorhanden.")
+                print("Keine letzte Auswahl vorhanden.")
 
-            print("\nVerfügbare Welten:")
+            print("Verfügbare Welten:")
             for idx in range(0, len(worlds), 1):
                 w: World = worlds[idx]
                 print(f"{idx + 1}) {w.name} | Pfad: {w.path} | Saves: {w.save_count} | Größe: {w.size_mb} MB")
 
-            sel_raw = input("Nummer der Welt auswählen ('z'=Zurück, 'q'=Beenden): ").strip().lower()
+            sel_raw = input("Nummer der Welt auswählen ('z'=Zurück, 'q'=Beenden, Enter=behalten): ").strip().lower()
             if sel_raw == "q":
                 print("Beende Programm...")
                 break
             if sel_raw == "z":
                 continue
+            if not sel_raw:
+                if last_world:
+                    chosen_world = last_world
+                else:
+                    print("Ungültige Auswahl, keine letzte Auswahl vorhanden.")
+                    continue
+            else:
+                try:
+                    sel = int(sel_raw)
+                    chosen_world = worlds[sel - 1]
+                except (ValueError, IndexError):
+                    print("Ungültige Auswahl.")
+                    continue
 
-            try:
-                sel = int(sel_raw)
-                chosen_world = worlds[sel - 1]
-            except (ValueError, IndexError):
-                print("Ungültige Auswahl.")
-                continue
-
-            config_controller.config.last_savegame_choice_path = chosen_world.name
+            config_controller.config.last_savegame_choice_path = chosen_world.path
 
             # Experimental-Flag
             last_exp: bool = config_controller.config.last_use_experimental
