@@ -4,26 +4,24 @@ import logging
 import os
 import shutil
 from datetime import datetime
+from typing import Any
 
+from pydantic import BaseModel, model_validator
 import git
 
 
-class World:
-    def __init__(self, name: str, path: str,
-                 created_at: str = None,
-                 last_played: str = None,
-                 save_count: int = 0,
-                 size_mb: float = 0.0,
-                 description: str = ""):
-        self.name = name.strip()
-        if path is None:
-            raise ValueError(f"World '{name}' hat keinen gültigen Pfad in worlds.json!")
-        self.path = path.strip()
-        self.created_at = created_at or datetime.now().isoformat(timespec="seconds")
-        self.last_played = last_played
-        self.save_count = save_count
-        self.size_mb = size_mb
-        self.description = description
+class World(BaseModel):
+    name: str
+    path: str
+    created_at: str = datetime.now().isoformat(timespec="seconds")
+    last_played: str | None = None
+    save_count: int = 0
+    size_mb: float = 0.0
+    description: str = ""
+
+    def model_post_init(self, context: Any) -> None:
+        if self.path is None:
+            raise ValueError(f"World '{self.name}' hat keinen gültigen Pfad in worlds.json!")
 
     def exists(self) -> bool:
         return os.path.isdir(self.path)
@@ -70,8 +68,8 @@ class World:
         if path is None and base_path is not None:
             path = os.path.join(base_path, data["name"])
         return World(
-            data["name"],
-            path,
+            name=data["name"],
+            path=path,
             created_at=data.get("created_at"),
             last_played=data.get("last_played"),
             save_count=data.get("save_count", 0),

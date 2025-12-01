@@ -16,7 +16,8 @@ class ConfigController:
         if os.path.exists(self.filename):
             try:
                 with open(self.filename, "r", encoding=self.file_encoding) as f:
-                    self.config = RunConfig(f)
+                    data = json.load(f)
+                self.config = RunConfig(**data)
             except Exception as e:
                 logging.error(f"Error at fetching the config file: {e}")
                 self.config = None
@@ -63,7 +64,7 @@ class ConfigController:
             logging.info(f"World '{name}' already exists.")
             return
         worlds = self.config.worlds.copy()
-        worlds.append(World(name, path, description=description))
+        worlds.append(World(name=name, path=path, description=description))
         self.set_worlds_list(worlds)
         logging.info(f"World '{name}' added at path '{path}'.")
 
