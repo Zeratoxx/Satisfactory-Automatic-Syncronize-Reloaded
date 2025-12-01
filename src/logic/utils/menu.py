@@ -91,6 +91,7 @@ def menu(config_controller: ConfigController, run_controller: RunController):
             config_controller.config.last_use_experimental = use_experimental
 
             logging.info(f"Chosen world: {chosen_world}")
+            config_controller.serialize_config()
 
             # Spiel starten und Warten bis Spiel beendet
             run_controller.load_world_and_start_game(chosen_world, use_experimental)
@@ -103,6 +104,7 @@ def menu(config_controller: ConfigController, run_controller: RunController):
             git_msg = timed_input("Neue Git-Message:", timeout=5, default=last_msg)
             # Basistext in config.json speichern
             config_controller.config.last_git_message = git_msg
+            config_controller.serialize_config()
 
             # Conventional Commit mit Datum/User/Host bauen
             final_msg = GitRepository.build_conventional_commit(git_msg, commit_type="update")
@@ -225,6 +227,7 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                 continue
 
             config_controller.config.last_git_message = new_msg
+            config_controller.serialize_config()
             print(f"Neue Git-Message gespeichert: {new_msg}")
 
         else:
