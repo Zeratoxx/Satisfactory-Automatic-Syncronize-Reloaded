@@ -65,7 +65,9 @@ class RunController:
         if self.os_type == OS.OSType.WINDOWS:
             app = "CrabTest" if use_experimental else "CrabEA"
             logging.info(f"Starting game via Epic Launcher: {app}")
-            await asyncio.to_thread(os.system, f"start com.epicgames.launcher://apps/{app}?action=launch")
+            # await asyncio.to_thread(os.system, f"start com.epicgames.launcher://apps/{app}?action=launch")
+            # TODO Debug
+            await asyncio.to_thread(os.system, "timeout /T 2")
         elif self.os_type == OS.OSType.LINUX:
             logging.info("Linux detected. Please start the game manually (Epic Launcher via Wine/Proton).")
         elif self.os_type == OS.OSType.MAC:
@@ -74,10 +76,14 @@ class RunController:
             logging.error("Unsupported OS type.")
 
     async def wait_for_game_closed(self):
+        count = 0
         started = False
         while True:
-            running = await asyncio.to_thread(
-                lambda: any(p.name() == self.executable_name for p in psutil.process_iter()))
+            # TODO Debug
+            running = (3 <= count <= 10)
+            count += 1
+            # running = await asyncio.to_thread(
+            #     lambda: any(p.name() == self.executable_name for p in psutil.process_iter()))
             if running:
                 if not started:
                     logging.info("Game started.")

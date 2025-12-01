@@ -51,14 +51,16 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                 print("Keine Welten vorhanden. Bitte zuerst eine Welt hinzufügen.")
                 continue
 
-            last_world = config_controller.get_setting("last_world")
+            last_world: World | None = config_controller.get_last_chosen_world()
             if last_world:
-                print(f"Letzte Auswahl war: {last_world}")
+                print(f"Letzte Auswahl war: {last_world.name}")
+            else:
+                print(f"Keine letzte Auswahl vorhanden.")
 
             print("\nVerfügbare Welten:")
-            for idx in range(1, len(worlds), 1):
+            for idx in range(0, len(worlds), 1):
                 w: World = worlds[idx]
-                print(f"{idx}) {w.name} | Pfad: {w.path} | Saves: {w.save_count} | Größe: {w.size_mb} MB")
+                print(f"{idx + 1}) {w.name} | Pfad: {w.path} | Saves: {w.save_count} | Größe: {w.size_mb} MB")
 
             sel_raw = input("Nummer der Welt auswählen ('z'=Zurück, 'q'=Beenden): ").strip().lower()
             if sel_raw == "q":
@@ -74,11 +76,11 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                 print("Ungültige Auswahl.")
                 continue
 
-            config_controller.set_setting("last_world", chosen_world.name)
+            config_controller.config.last_savegame_choice_path = chosen_world.name
 
             # Experimental-Flag
-            last_exp = config_controller.get_setting("last_experimental", False)
-            print(f"Letzte Einstellung: {'Experimental' if last_exp else 'Normal'}")
+            last_exp: bool = config_controller.config.last_use_experimental
+            print(f"Letzte Einstellung: {'Experimental' if last_exp else 'Stable'}")
             exp_raw = input("Experimental-Version starten? (j/n, Enter=letzte Einstellung): ").strip().lower()
             if exp_raw == "j":
                 use_experimental = True
@@ -86,26 +88,24 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                 use_experimental = False
             else:
                 use_experimental = last_exp
-            config_controller.set_setting("last_experimental", use_experimental)
+            config_controller.config.last_use_experimental = use_experimental
 
             logging.info(f"Chosen world: {chosen_world}")
 
             # Spiel starten und Warten bis Spiel beendet
-            run_controller.load_world_and_start_game(use_experimental, chosen_world)
+            run_controller.load_world_and_start_game(chosen_world, use_experimental)
             run_controller.wait_for_game_closed()
 
-            last_msg = config_controller.get_setting("last_git_message", "Spielupdate (Standard)")
+            last_msg = config_controller.config.last_git_message if config_controller.config.last_git_message != "" \
+                else "Spielupdate (Standard)"
             print(f"Letzte Git-Message: {last_msg}")
 
             git_msg = timed_input("Neue Git-Message:", timeout=5, default=last_msg)
             # Basistext in config.json speichern
-            config_controller.set_setting("last_git_message", git_msg)
+            config_controller.config.last_git_message = git_msg
 
             # Conventional Commit mit Datum/User/Host bauen
             final_msg = GitRepository.build_conventional_commit(git_msg, commit_type="update")
-
-            # Nur Basistext speichern
-            config_controller.set_setting("last_git_message", git_msg)
 
             run_controller.save_world(chosen_world, final_msg)
             # GitRepository.git_commit_and_push(chosen_world.path, final_msg)
@@ -119,8 +119,8 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                 continue
 
             print("\nVerfügbare Welten:")
-            for idx in range(1, len(worlds)+1, 1):
-                w: World = worlds[idx-1]
+            for idx in range(1, len(worlds) + 1, 1):
+                w: World = worlds[idx - 1]
                 print(f"{idx}) {w.name} | Pfad: {w.path}")
 
             sel_raw = input("Nummer der Welt zum Bearbeiten ('z'=Zurück, 'q'=Beenden): ").strip().lower()
@@ -208,7 +208,7 @@ def menu(config_controller: ConfigController, run_controller: RunController):
 
         # --- Git-Message bearbeiten ---
         elif choice == "5":
-            last_msg = config_controller.get_setting("last_git_message")
+            last_msg = config_controller.config.last_git_message
             if last_msg:
                 print(f"Aktuelle Git-Message: {last_msg}")
             else:
@@ -224,7 +224,7 @@ def menu(config_controller: ConfigController, run_controller: RunController):
                 print("Git-Message unverändert.")
                 continue
 
-            config_controller.set_setting("last_git_message", new_msg)
+            config_controller.config.last_git_message = new_msg
             print(f"Neue Git-Message gespeichert: {new_msg}")
 
         else:

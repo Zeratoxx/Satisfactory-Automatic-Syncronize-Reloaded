@@ -39,13 +39,6 @@ class ConfigController:
         except Exception as e:
             logging.error(f"Error at serializing the config: {e}")
 
-    def get_setting(self, key: str, default=None):
-        value = self.config.get(key)
-        return value if value is not None else default
-
-    def set_setting(self, key: str, value):
-        self.config.set(key, value)
-
     def set_worlds_list(self, worlds: list[World]):
         self.config.worlds = worlds
         self.serialize_config()
@@ -82,3 +75,11 @@ class ConfigController:
 
     def get_worlds(self) -> list[World]:
         return self.config.worlds
+
+    def get_last_chosen_world(self) -> World | None:
+        if not self.config.last_savegame_choice_path or self.config.last_savegame_choice_path == "":
+            return None
+        for world in self.config.worlds:
+            if world.path == self.config.last_savegame_choice_path:
+                return world
+        raise Exception("Nothing matched which is strange.")
