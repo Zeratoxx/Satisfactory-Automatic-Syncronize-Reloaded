@@ -51,51 +51,16 @@
         #            size: self.size
         #            pos: self.pos
 
-    CustomScrollView:
-#        canvas.before:
-#            Color:
-#                rgba: 0, 0, 1, .2
-#            Rectangle:
-#                size: self.size
-#                pos: self.pos
+    CustomRecycleView:
+        id: worldEditList
+        viewclass: 'ListLabel'
 
-        GridLayout: # TODO RecycleView here with list of worlds as data
-            id: worldEditList
-            cols: 1
-            spacing: 10
+        RecycleBoxLayout:
+            default_size: None, dp(56)
+            default_size_hint: 1, None
             size_hint_y: None
-
-#            canvas.before:
-#                Color:
-#                    rgba: 1, 0, 0, .2
-#                Rectangle:
-#                    size: self.size
-#                    pos: self.pos
-
-            ListLabel:
-                text: root.selected_dir
-            ListLabel:
-                text: 'test2'
-            ListLabel:
-                text: 'test3'
-            ListLabel:
-                text: 'test3'
-            ListLabel:
-                text: 'test3'
-            ListLabel:
-                text: 'test3'
-            ListLabel:
-                text: 'test3'
-            ListLabel:
-                text: 'test3'
-            ListLabel:
-                text: 'test3'
-            ListLabel:
-                text: 'test3'
-            ListLabel:
-                text: 'test4'
-            ListLabel:
-                text: 'test4'
+            height: self.minimum_height
+            orientation: 'vertical'
 
     BoxLayout:
         size_hint_y: None

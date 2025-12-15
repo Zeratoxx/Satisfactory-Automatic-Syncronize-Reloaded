@@ -12,3 +12,5 @@ from .ReactiveButtonWithToolTip import ReactiveButtonWithToolTip
 from .CustomScrollView import CustomScrollView
 # noinspection PyUnusedImports
 from .PointedSpinner import PointedSpinner
+# noinspection PyUnusedImports
+from .CustomRecycleView import CustomRecycleView
